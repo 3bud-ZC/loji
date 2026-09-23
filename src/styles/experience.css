@@ -84,7 +84,8 @@ body.lightbox-open{overflow:hidden}
 .chapter-poetry .section-title{max-width:520px;margin-inline:auto;margin-bottom:.9rem}
 .poetry-card{min-height:61svh;padding:3.25rem 0}
 .poetry-card.poet-qays{min-height:64svh}
-.poetry-card.poet-imru,.poetry-card.poet-and-i{min-height:53svh}
+.poetry-card.poet-imru{min-height:53svh}
+.poetry-card.poet-and-i{min-height:72svh}
 .poetry-card:not(:last-child)::after{width:150px}
 .poetry-card:not(:last-child)::before{content:"❦";position:absolute;bottom:-10px;z-index:2;color:rgba(199,165,108,.34);background:#0b0608;padding:0 .65rem;font-family:"Cormorant Garamond",serif;font-size:1rem}
 .poet-name{margin-bottom:.9rem}
@@ -155,7 +156,8 @@ body.started .audio-dock:hover{border-color:rgba(199,165,108,.32)}
   .chapter-poetry{padding-top:2.25rem;padding-bottom:.5rem}
   .poetry-card{padding-block:2.55rem}
   .poetry-card.poet-qays{min-height:61svh}
-  .poetry-card.poet-imru,.poetry-card.poet-and-i{min-height:49svh}
+  .poetry-card.poet-imru{min-height:49svh}
+  .poetry-card.poet-and-i{min-height:68svh}
   .chapter-photo{min-height:72svh}
   .chapter-music{min-height:72svh}
   .record-player{width:min(57vw,246px)}
@@ -173,3 +175,7 @@ body.started .audio-dock:hover{border-color:rgba(199,165,108,.32)}
   .book-page-glow{display:none}
   .secret-toast.is-visible{transform:translate(-50%,0)}
 }
+
+.poetry-card.poet-and-i .verse:first-child{color:#e7c68d}
+.poetry-card.poet-and-i .verse:last-child{margin-top:.35rem;color:#e7c68d}
+.poetry-card.poet-and-i .poet-note{margin-top:.55rem;color:rgba(210,170,107,.86)}
