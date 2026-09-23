@@ -1,7 +1,7 @@
 # Project Status: Loji Birthday Poetic Experience
 
 ## Current Completion State
-- **Status:** Clean Rebuild — Implemented / Deploying
+- **Status:** Clean Rebuild + Premium Polish — Deployed & Verified
 - **Repository:** https://github.com/3bud-ZC/loji.git
 - **Live URL:** https://3bud-zc.github.io/loji/
 
@@ -26,4 +26,19 @@
 - Mobile layout is designed first for iPhone Safari and Android Chrome with safe-area support and reduced-motion fallbacks.
 
 ## Verification
-- Awaiting GitHub Actions build and GitHub Pages deployment for the latest clean rebuild commit.
+- GitHub Actions build: **Passed**.
+- GitHub Pages deployment: **Passed**.
+- Premium polish verified after deployment.
+
+
+## Premium Polish Pass
+- Preserved the approved current design and layout rather than redesigning it.
+- Tightened the poetry vertical rhythm with poet-specific heights to remove dead space on mobile.
+- Softened chapter blending and added restrained background texture for smoother visual continuity.
+- Refined the Loji portrait keepsake with subtler proportions, edge treatment, and depth.
+- Reduced and refined the record player proportions, spindle detail, lighting, and playing state.
+- Aged the wishes note with softer edges, stains, texture, and improved mobile sizing.
+- Reduced birthday section dead space and strengthened the name glow without changing the composition.
+- Narrowed and refined the envelope/final letter for better iPhone readability.
+- Added restrained micro-choreography for worlds, record player, wishes note, birthday name, and envelope.
+- Shortened and reduced the birthday particle effect so petals do not visually bleed into the final letter.
