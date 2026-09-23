@@ -1,454 +1,311 @@
 import { siteConfig } from './content/site';
 import { VintageAudioPlayer } from './audio/player';
 import { PoeticCelebration } from './particles/confetti';
-import { icons } from './utils/icons';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Asset URLs handled by Vite
-import botanicalSvg from './assets/images/botanical.svg';
-import calligraphySvg from './assets/images/calligraphy.svg';
-import vinylSvg from './assets/images/vinyl.svg';
-import bookSvg from './assets/images/book.svg';
-
-const placeholderImages: Record<string, string> = {
-  botanical: botanicalSvg,
-  calligraphy: calligraphySvg,
-  vinyl: vinylSvg,
-  book: bookSvg
-};
-
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Particle Celebration Engine
-  const canvas = document.getElementById('celebrationCanvas') as HTMLCanvasElement;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const canvas = document.getElementById('celebrationCanvas') as HTMLCanvasElement | null;
   let celebration: PoeticCelebration | null = null;
   if (canvas) {
-    try {
-      celebration = new PoeticCelebration(canvas);
-    } catch (e) {
-      console.warn('Celebration canvas init skipped:', e);
-    }
+    try { celebration = new PoeticCelebration(canvas); } catch (error) { console.warn(error); }
   }
 
-  // 2. Audio Engine
   const audioPlayer = new VintageAudioPlayer(siteConfig.music.audioSrc);
+  const audioDock = document.getElementById('audioDock');
+  const audioDockIcon = document.getElementById('audioDockIcon');
+  const audioDockLabel = document.getElementById('audioDockLabel');
+  const musicToggle = document.getElementById('musicToggle');
+  const musicStatus = document.getElementById('musicStatus');
+  const recordPlayer = document.getElementById('recordPlayer');
 
-  const stickyAudioBar = document.getElementById('stickyAudioBar');
-  const stickyAudioToggle = document.getElementById('stickyAudioToggle');
-  const stickyAudioIcon = document.getElementById('stickyAudioIcon');
-  const btnMainPlayToggle = document.getElementById('btnMainPlayToggle');
-  const mainPlayBtnText = document.getElementById('mainPlayBtnText');
-  const turntableVinyl = document.getElementById('turntableVinyl');
-  const turntableAssembly = document.getElementById('turntableAssembly');
-  const soundStatus = document.getElementById('soundStatus');
-
-  const updateAudioUI = (isPlaying: boolean) => {
-    if (turntableVinyl) {
-      if (isPlaying) {
-        turntableVinyl.classList.add('spinning');
-      } else {
-        turntableVinyl.classList.remove('spinning');
-      }
-    }
-
-    if (turntableAssembly) {
-      if (isPlaying) {
-        turntableAssembly.classList.add('playing');
-      } else {
-        turntableAssembly.classList.remove('playing');
-      }
-    }
-
-    if (stickyAudioBar) {
-      if (isPlaying) {
-        stickyAudioBar.classList.add('playing');
-      } else {
-        stickyAudioBar.classList.remove('playing');
-      }
-    }
-
-    if (stickyAudioIcon) {
-      stickyAudioIcon.innerHTML = isPlaying ? icons.pause : icons.play;
-    }
-
-    if (mainPlayBtnText) {
-      mainPlayBtnText.textContent = isPlaying ? 'أوقفي اللحن.' : 'شغّلي اللحن.';
-    }
-    if (soundStatus) {
-      soundStatus.textContent = isPlaying ? 'الأسطوانة بتعزف الآن' : 'جاهز للعزف';
-    }
+  const updateAudioUI = (playing: boolean) => {
+    recordPlayer?.classList.toggle('playing', playing);
+    if (audioDockIcon) audioDockIcon.textContent = playing ? 'Ⅱ' : '▶';
+    if (audioDockLabel) audioDockLabel.textContent = playing ? 'إيقاف' : 'اللحن';
+    if (musicToggle) musicToggle.textContent = playing ? 'أوقفي اللحن' : 'شغّلي اللحن';
+    if (musicStatus) musicStatus.textContent = playing ? 'اللحن شغال الآن' : 'عود وناي ودف خفيف';
   };
-
   audioPlayer.subscribe(updateAudioUI);
 
   const toggleAudio = async () => {
     try {
-      if (soundStatus) soundStatus.textContent = 'لحظة...';
       await audioPlayer.toggle();
     } catch (error) {
-      console.error('Audio playback failed:', error);
-      if (soundStatus) soundStatus.textContent = 'الصوت محتاج ضغطة تانية';
+      console.error(error);
+      if (musicStatus) musicStatus.textContent = 'اضغطي مرة تانية لتشغيل الصوت';
     }
   };
 
-  stickyAudioToggle?.addEventListener('click', toggleAudio);
-  btnMainPlayToggle?.addEventListener('click', toggleAudio);
-  turntableVinyl?.addEventListener('click', toggleAudio);
-  turntableVinyl?.addEventListener('keydown', (event) => {
+  audioDock?.addEventListener('click', () => { void toggleAudio(); });
+  musicToggle?.addEventListener('click', () => { void toggleAudio(); });
+  recordPlayer?.addEventListener('click', () => { void toggleAudio(); });
+  recordPlayer?.addEventListener('keydown', event => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      toggleAudio();
+      void toggleAudio();
     }
   });
 
-  // 3. Opening Transition
-  const openingScreen = document.getElementById('openingScreen');
-  const btnOpenManuscript = document.getElementById('btnOpenManuscript');
+  const intro = document.getElementById('intro');
+  const openExperience = document.getElementById('openExperience');
 
-  btnOpenManuscript?.addEventListener('click', () => {
-    document.body.classList.add('manuscript-open');
+  openExperience?.addEventListener('click', async () => {
+    document.body.classList.add('started');
+    try { await audioPlayer.play(); } catch (error) { console.warn('Audio start skipped:', error); }
 
-    if (openingScreen) {
-      const left = openingScreen.querySelector('.cover-left');
-      const right = openingScreen.querySelector('.cover-right');
-      const content = openingScreen.querySelector('.opening-content');
-      const frame = openingScreen.querySelector('.opening-gold-frame');
+    if (!intro) return;
+    const cover = intro.querySelector('.book-cover');
+    const pages = intro.querySelector('.book-pages');
 
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const tl = gsap.timeline({
-          onComplete: () => { openingScreen.style.display = 'none'; }
+    if (reducedMotion) {
+      intro.remove();
+      return;
+    }
+
+    const timeline = gsap.timeline({ onComplete: () => intro.remove() });
+    timeline
+      .to(cover, {
+        rotateY: -112,
+        xPercent: -7,
+        duration: 1.2,
+        ease: 'power3.inOut',
+        transformOrigin: 'left center'
+      })
+      .to(pages, { x: 10, duration: .6, ease: 'power2.out' }, '-=.72')
+      .to(intro, { opacity: 0, duration: .45, ease: 'power2.out' }, '-=.15');
+  });
+
+  const worldWords = document.getElementById('worldWords');
+  const worldReflection = document.getElementById('worldReflection');
+
+  siteConfig.littleWorld.ideas.forEach((idea, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'world-word' + (index === 0 ? ' active' : '');
+    button.textContent = idea.keyword;
+    button.setAttribute('role', 'tab');
+    button.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+
+    button.addEventListener('click', () => {
+      document.querySelectorAll('.world-word').forEach(el => {
+        el.classList.remove('active');
+        el.setAttribute('aria-selected', 'false');
+      });
+      button.classList.add('active');
+      button.setAttribute('aria-selected', 'true');
+
+      if (worldReflection) {
+        gsap.to(worldReflection, {
+          opacity: 0,
+          y: 5,
+          duration: .14,
+          onComplete: () => {
+            worldReflection.textContent = idea.reflection;
+            gsap.to(worldReflection, { opacity: 1, y: 0, duration: .3 });
+          }
         });
-        tl.to(content, { opacity: 0, y: -14, duration: .42, ease: 'power2.in' })
-          .to(frame, { opacity: 0, duration: .28 }, '<')
-          .to(left, { xPercent: -108, rotateY: -12, duration: 1.05, ease: 'power3.inOut' }, '-=.05')
-          .to(right, { xPercent: 108, rotateY: 12, duration: 1.05, ease: 'power3.inOut' }, '<')
-          .to(openingScreen, { opacity: 0, duration: .35 }, '-=.18');
-      } else {
-        openingScreen.style.display = 'none';
       }
-    }
-    // Opening stays quiet; the book-opening motion is the moment.
+    });
+
+    worldWords?.appendChild(button);
   });
 
-  // 4. Her Little World (Spatial Editorial)
-  const worldWordsRow = document.getElementById('worldWordsRow');
-  const reflectionText = document.getElementById('reflectionText');
+  if (worldReflection) {
+    worldReflection.textContent = siteConfig.littleWorld.ideas[0]?.reflection || '';
+  }
 
-  if (worldWordsRow && siteConfig.littleWorld.ideas.length > 0) {
-    siteConfig.littleWorld.ideas.forEach((idea, index) => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = `world-word-btn ${index === 0 ? 'active' : ''}`;
-      btn.setAttribute('role', 'tab');
-      btn.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
-      btn.textContent = idea.keyword;
+  const poetryStack = document.getElementById('poetryStack');
+  siteConfig.poetryMoment.scenes.forEach(scene => {
+    const article = document.createElement('article');
+    article.className = 'poetry-card' + (scene.isOriginal ? ' is-original' : '');
 
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.world-word-btn').forEach(b => {
-          b.classList.remove('active');
-          b.setAttribute('aria-selected', 'false');
-        });
-        btn.classList.add('active');
-        btn.setAttribute('aria-selected', 'true');
+    const name = document.createElement('span');
+    name.className = 'poet-name';
+    name.textContent = scene.poetName;
 
-        if (reflectionText) {
-          reflectionText.style.opacity = '0';
-          setTimeout(() => {
-            reflectionText.textContent = idea.reflection;
-            reflectionText.style.opacity = '1';
-          }, 180);
-        }
-      });
-
-      worldWordsRow.appendChild(btn);
+    const verses = document.createElement('div');
+    verses.className = 'verses';
+    scene.verses.forEach(verseText => {
+      const line = document.createElement('p');
+      line.className = 'verse';
+      line.textContent = verseText;
+      verses.appendChild(line);
     });
 
-    if (reflectionText && siteConfig.littleWorld.ideas[0]) {
-      reflectionText.textContent = siteConfig.littleWorld.ideas[0].reflection;
-    }
-  }
+    const note = document.createElement('p');
+    note.className = 'poet-note';
+    note.textContent = scene.annotation;
 
-  // 5. Poetry Signature Moment
-  const poetryFlow = document.getElementById('poetryFlow');
-  if (poetryFlow) {
-    siteConfig.poetryMoment.scenes.forEach(scene => {
-      const sceneEl = document.createElement('div');
-      sceneEl.className = `poetry-individual-scene reveal-ink poet-${scene.poetId} ${scene.isOriginal ? 'original-scene' : ''}`;
-
-      const versesHtml = scene.verses
-        .map(verse => `<p class="verse-line">${verse}</p>`)
-        .join('');
-
-      sceneEl.innerHTML = `
-        <span class="scene-poet-name">${scene.poetName}</span>
-        <div class="poetry-verses-group">
-          ${versesHtml}
-        </div>
-        <p class="scene-annotation ${scene.isOriginal ? 'original-voice' : ''}">${scene.annotation}</p>
-      `;
-
-      poetryFlow.appendChild(sceneEl);
-    });
-  }
-
-  // 6. Memory Vignette
-  const memoryVignetteImg = document.getElementById('memoryVignetteImg') as HTMLImageElement;
-  const memoryVignetteCaption = document.getElementById('memoryVignetteCaption');
-
-  if (memoryVignetteImg) {
-    const v = siteConfig.memories.vignette;
-    const resolvedImg = v.imageSrc || placeholderImages[v.placeholderType] || placeholderImages.botanical;
-    memoryVignetteImg.addEventListener('load', () => {
-      memoryVignetteImg.classList.add('loaded');
-    }, { once: true });
-    memoryVignetteImg.src = resolvedImg;
-    memoryVignetteImg.alt = v.title;
-  }
-  if (memoryVignetteCaption) {
-    memoryVignetteCaption.textContent = siteConfig.memories.vignette.caption;
-  }
-
-  // 7. Classic listening notes
-  const musicPlaylist = document.getElementById('musicPlaylist');
-  if (musicPlaylist) {
-    siteConfig.music.playlist.forEach(track => {
-      const li = document.createElement('li');
-      li.textContent = track;
-      musicPlaylist.appendChild(li);
-    });
-  }
-
-  // 8. Personal Wishes (Concise Poetic Fragments)
-  const wishesLines = document.getElementById('wishesLines');
-  if (wishesLines) {
-    siteConfig.wishes.items.forEach(itemText => {
-      const li = document.createElement('li');
-      li.textContent = itemText;
-      wishesLines.appendChild(li);
-    });
-  }
-
-  // 9. Birthday Reveal & Petals
-  const btnPetalsBurst = document.getElementById('btnPetalsBurst');
-  btnPetalsBurst?.addEventListener('click', () => {
-    celebration?.burst(24);
+    article.append(name, verses, note);
+    poetryStack?.appendChild(article);
   });
 
-  const birthdaySection = document.getElementById('birthday-reveal');
-  let hasBurst = false;
-  if (birthdaySection) {
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !hasBurst) {
-          hasBurst = true;
-          celebration?.burst(18);
-        }
-      });
-    }, { threshold: 0.35 });
-    obs.observe(birthdaySection);
+  const lojiPhoto = document.getElementById('lojiPhoto') as HTMLImageElement | null;
+  const photoCaption = document.getElementById('photoCaption');
+  if (lojiPhoto) {
+    lojiPhoto.src = siteConfig.memories.vignette.imageSrc || '';
+    lojiPhoto.alt = siteConfig.memories.vignette.title;
+  }
+  if (photoCaption) photoCaption.textContent = siteConfig.memories.vignette.caption;
+
+  const musicInspiration = document.getElementById('musicInspiration');
+  if (musicInspiration) {
+    musicInspiration.textContent = siteConfig.music.playlist[0] || '';
   }
 
-  // 10. Final Sealed Letter
-  const waxEnvelope = document.getElementById('waxEnvelope');
-  const waxSealBtn = document.getElementById('waxSealBtn');
-  const unfoldedLetter = document.getElementById('unfoldedLetter');
-  const letterParagraphs = document.getElementById('letterParagraphs');
+  const wishesList = document.getElementById('wishesList');
+  siteConfig.wishes.items.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = item;
+    wishesList?.appendChild(li);
+  });
+
+  document.getElementById('petalButton')?.addEventListener('click', () => {
+    celebration?.burst(16);
+  });
+
+  const letterStage = document.getElementById('letterStage');
+  const letterEnvelope = document.getElementById('letterSeal');
+  const finalLetter = document.getElementById('finalLetter');
+  const letterSalutation = document.getElementById('letterSalutation');
+  const letterBody = document.getElementById('letterBody');
   const letterClosing = document.getElementById('letterClosing');
-  const signatureName = document.getElementById('signatureName');
-  const signatureDate = document.getElementById('signatureDate');
-  const btnResealLetter = document.getElementById('btnResealLetter');
+  const letterSignature = document.getElementById('letterSignature');
+  const letterDate = document.getElementById('letterDate');
 
-  if (letterParagraphs) {
-    letterParagraphs.innerHTML = siteConfig.letter.bodyParagraphs
-      .map(p => `<p>${p}</p>`)
-      .join('');
+  if (letterSalutation) letterSalutation.textContent = siteConfig.letter.salutation;
+  if (letterBody) {
+    siteConfig.letter.bodyParagraphs.forEach(paragraph => {
+      const p = document.createElement('p');
+      p.textContent = paragraph;
+      letterBody.appendChild(p);
+    });
   }
   if (letterClosing) letterClosing.textContent = siteConfig.letter.closing;
-  if (signatureName) signatureName.textContent = siteConfig.letter.signature;
-  if (signatureDate) signatureDate.textContent = siteConfig.letter.date;
+  if (letterSignature) letterSignature.textContent = siteConfig.letter.signature;
+  if (letterDate) letterDate.textContent = siteConfig.letter.date;
 
   const openLetter = () => {
-    if (waxEnvelope && unfoldedLetter) {
-      waxEnvelope.style.display = 'none';
-      unfoldedLetter.classList.add('open');
-      unfoldedLetter.setAttribute('aria-hidden', 'false');
-      celebration?.burst(10);
+    if (!letterStage || !letterEnvelope || !finalLetter) return;
+    letterStage.classList.add('open');
+    finalLetter.setAttribute('aria-hidden', 'false');
+
+    if (reducedMotion) {
+      letterEnvelope.style.display = 'none';
+      finalLetter.style.display = 'block';
+      return;
     }
+
+    const flap = letterEnvelope.querySelector('.envelope-flap');
+    const seal = letterEnvelope.querySelector('.envelope-seal');
+    const timeline = gsap.timeline();
+    timeline
+      .to(seal, { scale: .72, opacity: 0, rotate: 14, duration: .3, ease: 'power2.in' })
+      .to(flap, { rotateX: 172, duration: .7, ease: 'power3.inOut' }, '-=.03')
+      .to(letterEnvelope, { y: 30, opacity: 0, duration: .4, ease: 'power2.in' })
+      .set(letterEnvelope, { display: 'none' })
+      .set(finalLetter, { display: 'block' })
+      .fromTo(finalLetter,
+        { opacity: 0, y: 38, scale: .97 },
+        { opacity: 1, y: 0, scale: 1, duration: .75, ease: 'power3.out' }
+      );
   };
 
-  const closeLetter = () => {
-    if (waxEnvelope && unfoldedLetter) {
-      unfoldedLetter.classList.remove('open');
-      unfoldedLetter.setAttribute('aria-hidden', 'true');
-      waxEnvelope.style.display = 'flex';
+  letterEnvelope?.addEventListener('click', openLetter);
+
+  document.getElementById('closeLetter')?.addEventListener('click', () => {
+    if (!letterStage || !letterEnvelope || !finalLetter) return;
+    finalLetter.setAttribute('aria-hidden', 'true');
+
+    if (reducedMotion) {
+      finalLetter.style.display = 'none';
+      letterEnvelope.style.display = 'block';
+      letterStage.classList.remove('open');
+      return;
     }
-  };
 
-  waxEnvelope?.addEventListener('click', openLetter);
-  waxEnvelope?.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      openLetter();
-    }
-  });
-  waxSealBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    openLetter();
-  });
-  btnResealLetter?.addEventListener('click', closeLetter);
-
-  // 11. Scroll Observer for Gentle Manuscript Reveals
-  const revealElements = document.querySelectorAll('.reveal-fade, .reveal-ink');
-  if ('IntersectionObserver' in window) {
-    const revealObserver = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
-
-    revealElements.forEach(el => revealObserver.observe(el));
-  } else {
-    revealElements.forEach(el => el.classList.add('visible'));
-  }
-
-  // 12. Cinematic chapter choreography
-  const initCinematicMotion = () => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const scenes = Array.from(document.querySelectorAll<HTMLElement>('.manuscript-scene[data-scene]'));
-
-    const setScene = (scene?: string) => {
-      document.body.dataset.scene = scene || 'hero';
-    };
-    setScene('hero');
-
-    scenes.forEach(section => {
-      ScrollTrigger.create({
-        trigger: section,
-        start: 'top 55%',
-        end: 'bottom 45%',
-        onEnter: () => setScene(section.dataset.scene),
-        onEnterBack: () => setScene(section.dataset.scene)
-      });
-    });
-
-    if (reduced) return;
-
-    gsap.from('.hero-composition', {
+    gsap.to(finalLetter, {
       opacity: 0,
-      y: 42,
-      scale: .96,
-      duration: 1.35,
-      ease: 'power3.out',
-      scrollTrigger: { trigger: '#hero', start: 'top 70%' }
+      y: 24,
+      duration: .32,
+      onComplete: () => {
+        finalLetter.style.display = 'none';
+        letterEnvelope.style.display = 'block';
+        gsap.set(letterEnvelope, { opacity: 1, y: 0 });
+        gsap.set(letterEnvelope.querySelector('.envelope-flap'), { rotateX: 0 });
+        gsap.set(letterEnvelope.querySelector('.envelope-seal'), { opacity: 1, scale: 1, rotate: 0 });
+        letterStage.classList.remove('open');
+      }
+    });
+  });
+
+  const chapters = Array.from(document.querySelectorAll<HTMLElement>('.chapter'));
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const scene = (entry.target as HTMLElement).dataset.scene;
+        if (scene) document.body.dataset.scene = scene;
+      }
+    });
+  }, { threshold: .48 });
+  chapters.forEach(chapter => observer.observe(chapter));
+
+  if (!reducedMotion) {
+    chapters.forEach(chapter => {
+      const inner = chapter.querySelector('.chapter-inner');
+      if (!inner) return;
+      gsap.fromTo(inner,
+        { opacity: 0, y: 34, filter: 'blur(7px)' },
+        {
+          opacity: 1,
+          y: 0,
+          filter: 'blur(0px)',
+          duration: .95,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: chapter,
+            start: 'top 74%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
     });
 
-    gsap.to('.hero-orbit', {
-      rotate: 44,
-      yPercent: 10,
-      ease: 'none',
-      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.2 }
-    });
-
-    gsap.utils.toArray<HTMLElement>('.world-word-btn').forEach((word, index) => {
-      gsap.from(word, {
-        opacity: 0,
-        y: 30,
-        rotate: index % 2 ? 3 : -3,
-        duration: .8,
-        delay: index * .07,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: '#little-world', start: 'top 65%' }
-      });
-    });
-
-    gsap.utils.toArray<HTMLElement>('.poetry-individual-scene').forEach(scene => {
-      const poet = scene.querySelector('.scene-poet-name');
-      const lines = scene.querySelectorAll('.verse-line');
-      const note = scene.querySelector('.scene-annotation');
-
-      const tl = gsap.timeline({
+    gsap.utils.toArray<HTMLElement>('.poetry-card').forEach(card => {
+      const lines = card.querySelectorAll('.verse');
+      const note = card.querySelector('.poet-note');
+      const name = card.querySelector('.poet-name');
+      const timeline = gsap.timeline({
         scrollTrigger: {
-          trigger: scene,
+          trigger: card,
           start: 'top 68%',
-          end: 'center 45%',
-          scrub: .45
+          end: 'center 50%',
+          scrub: .5
         }
       });
-      tl.fromTo(scene, { opacity: .18, scale: .955 }, { opacity: 1, scale: 1, ease: 'none' })
-        .from(poet, { opacity: 0, y: 26, letterSpacing: '.18em' }, '<')
-        .from(lines, {
-          opacity: 0,
-          y: 34,
-          clipPath: 'inset(100% 0 0 0)',
-          stagger: .13,
-          ease: 'power2.out'
-        }, '<.08')
-        .from(note, { opacity: 0, y: 18 }, '-=.15');
+      timeline
+        .from(name, { opacity: 0, y: 16 })
+        .from(lines, { opacity: 0, y: 24, stagger: .1 }, '<.05')
+        .from(note, { opacity: 0, y: 12 }, '-=.1');
     });
 
-    gsap.from('.vintage-photo-frame', {
-      opacity: 0,
-      y: 95,
-      rotate: -9,
-      scale: .82,
-      duration: 1.25,
-      ease: 'power4.out',
-      scrollTrigger: { trigger: '#memories', start: 'top 66%' }
-    });
-
-    gsap.to('.vintage-photo-frame', {
-      y: -24,
+    gsap.to('.keepsake', {
+      y: -18,
       rotate: -1,
       ease: 'none',
-      scrollTrigger: { trigger: '#memories', start: 'top bottom', end: 'bottom top', scrub: 1.4 }
+      scrollTrigger: {
+        trigger: '#photo',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1.1
+      }
     });
+  }
 
-    gsap.from('.turntable-assembly', {
-      opacity: 0,
-      y: 80,
-      rotateX: 18,
-      scale: .82,
-      duration: 1.15,
-      ease: 'back.out(1.25)',
-      scrollTrigger: { trigger: '#music', start: 'top 68%' }
-    });
-
-    gsap.from('.wishes-lines li', {
-      opacity: 0,
-      x: 30,
-      stagger: .12,
-      duration: .65,
-      ease: 'power3.out',
-      scrollTrigger: { trigger: '#personal-wishes', start: 'top 62%' }
-    });
-
-    gsap.from('.birthday-name', {
-      opacity: 0,
-      scale: .55,
-      filter: 'blur(12px)',
-      duration: 1.35,
-      ease: 'power4.out',
-      scrollTrigger: { trigger: '#birthday-reveal', start: 'top 55%' }
-    });
-
-    gsap.to('.arched-window', {
-      yPercent: -8,
-      ease: 'none',
-      scrollTrigger: { trigger: 'main', start: 'top top', end: 'bottom bottom', scrub: 1.5 }
-    });
-
-    gsap.to('.dust-near', {
-      yPercent: -10,
-      xPercent: -4,
-      ease: 'none',
-      scrollTrigger: { trigger: 'main', start: 'top top', end: 'bottom bottom', scrub: 2 }
-    });
-  };
-
-  requestAnimationFrame(initCinematicMotion);
+  window.addEventListener('beforeunload', () => audioPlayer.dispose());
 });
