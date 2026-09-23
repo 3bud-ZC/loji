@@ -57,7 +57,7 @@
         </svg>
       </span>
     </button>
-    <span class="audio-bar-text" id="stickyAudioText">صوت من الماضي</span>
+    <span class="audio-bar-text" id="stickyAudioText">مزاج قديم</span>
   </div>
 
   <!-- MAIN MANUSCRIPT CONTAINER -->
@@ -68,7 +68,7 @@
       <div class="hero-composition reveal-ink">
         <h1 class="display-hero">لُـجَـيْـن</h1>
         <p class="hero-subtitle">«بعض الأسماء تُقال، وبعضها يُروى.»</p>
-        <span class="hero-annotation">مخطوطة خاصة • خريف ٢٠٢٦</span>
+        <span class="hero-annotation">إلى لُجين • ٢٠٢٦</span>
       </div>
     </header>
 
@@ -82,7 +82,7 @@
         </div>
 
         <div class="world-reflection-display" id="worldReflectionDisplay" role="tabpanel" aria-live="polite">
-          <p class="reflection-text" id="reflectionText">الكلام حين لا تكفيه المحادثة.</p>
+          <p class="reflection-text" id="reflectionText">الكلام لما الكلام العادي ما يكفيش.</p>
         </div>
       </div>
     </section>
@@ -95,17 +95,19 @@
     </section>
 
     <!-- 05 — MEMORY VIGNETTE -->
-    <section class="manuscript-scene memory-scene" id="memories" aria-label="أثر باق">
-      <div class="memory-vignette-wrapper reveal-fade">
-        <div class="vignette-frame">
-          <img src="" id="memoryVignetteImg" alt="أثر باق" loading="lazy" decoding="async" />
+    <section class="manuscript-scene memory-scene" id="memories" aria-label="صورة واحدة تكفي">
+      <p class="manuscript-marginalia reveal-fade">صورة واحدة تكفي</p>
+      <div class="memory-vignette-wrapper reveal-ink">
+        <div class="vignette-frame vintage-photo-frame">
+          <img src="" id="memoryVignetteImg" alt="لُجين" loading="lazy" decoding="async" />
         </div>
-        <p class="vignette-caption" id="memoryVignetteCaption">كوردةٍ حُفظت بين دفتي كتاب.</p>
+        <p class="vignette-caption" id="memoryVignetteCaption">وبعض الصور لا تحتاج شرحًا.</p>
       </div>
     </section>
 
     <!-- 06 — OLD MUSIC SECTION (Turntable) -->
-    <section class="manuscript-scene music-scene" id="music" aria-label="صوت من الماضي">
+    <section class="manuscript-scene music-scene" id="music" aria-label="فيروز والكلاسيكيات">
+      <p class="music-marginalia reveal-fade">فيروز • كلاسيكيات • ليل هادئ</p>
       <div class="music-composition reveal-fade">
         <div class="turntable-assembly" id="turntableAssembly">
           <!-- Tonearm needle -->
@@ -118,17 +120,18 @@
           <!-- Rotating Vinyl Disc -->
           <div class="turntable-vinyl" id="turntableVinyl" role="button" tabindex="0" aria-label="شغليها أو أوقفيها">
             <div class="vinyl-label-art">
-              <span class="vinyl-label-title">صوت الشرق</span>
+              <span class="vinyl-label-title">فيروزيات</span>
               <span class="vinyl-label-sub">٣٣ دورة</span>
             </div>
           </div>
         </div>
 
         <div class="music-prompt-wrapper">
-          <button id="btnMainPlayToggle" class="btn-play-prompt" type="button" aria-label="تشغيل الموسيقى">
-            <span id="mainPlayBtnText">شغّليها.</span>
+          <button id="btnMainPlayToggle" class="btn-play-prompt" type="button" aria-label="تشغيل الجو الموسيقي">
+            <span id="mainPlayBtnText">شغّلي الجو.</span>
           </button>
         </div>
+        <ul id="musicPlaylist" class="music-playlist" aria-label="اختيارات كلاسيكية"></ul>
       </div>
     </section>
 
@@ -146,7 +149,7 @@
     <section class="manuscript-scene birthday-scene" id="birthday-reveal" aria-label="يوم ميلادك">
       <div class="birthday-composition reveal-fade">
         <span class="birthday-moment-lead">واليوم...</span>
-        <p class="birthday-moment-sub">تُقلب القصيدة إلى صفحة جديدة.</p>
+        <p class="birthday-moment-sub">صفحة جديدة... والباقي لسه بيتكتب.</p>
         
         <h2 class="birthday-name">لُـجَـيْـن</h2>
         <p class="birthday-wish">كل سنة وأنتِ بخير.</p>
@@ -169,7 +172,7 @@
             <span>لُ</span>
           </div>
           <p class="envelope-instruction">آخر حاجة • رسالة لكِ</p>
-          <span class="envelope-hint font-english">Sealed with wax • Click to open</span>
+          <span class="envelope-hint">رسالة بختم شمعي • افتحيها</span>
         </div>
 
         <!-- Unfolded Letter State -->
@@ -180,7 +183,7 @@
           </div>
           <div class="letter-sign-off">
             <p class="letter-closing" id="letterClosing">عيد ميلاد سعيد.</p>
-            <span class="letter-signature-name" id="signatureName">من صديقٍ يقدّر الكلمات</span>
+            <span class="letter-signature-name" id="signatureName">عابد</span>
             <span class="letter-date" id="signatureDate">سبتمبر ٢٠٢٦</span>
           </div>
           <button id="btnResealLetter" class="btn-reseal-prompt" type="button">أعيدي طي الرسالة</button>
@@ -190,7 +193,7 @@
 
     <!-- FOOTER -->
     <footer class="manuscript-colophon">
-      <p>صُممت وصيغت بكل عناية لـ لُجين • خريف ٢٠٢٦</p>
+      <p>لُجين • ٢٠٢٦</p>
     </footer>
 
   </main>

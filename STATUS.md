@@ -1,7 +1,7 @@
 # Project Status: Loji Birthday Poetic Experience
 
 ## Current Completion State
-- **Status:** Premium Refinement Completed & Ready to Ship
+- **Status:** Final Personalized Release — Deployed
 - **Repository:** https://github.com/3bud-ZC/loji.git
 - **Verified Live URL:** https://3bud-zc.github.io/loji/
 
@@ -30,7 +30,13 @@
 - **Workflow:** `.github/workflows/deploy.yml` configured using official `actions/deploy-pages@v4` and `actions/upload-pages-artifact@v3`.
 - **Target URL:** `https://3bud-zc.github.io/loji/`
 
-## Assets Needed from Owner (Optional)
-- Real photographs of Loji can be placed in `public/images/` and referenced in `src/content/site.ts` (currently displays a delicate antique botanical vignette).
-- Custom audio MP3 track can be placed in `public/audio/` and configured in `src/content/site.ts` (currently generates an acoustic vintage melody via Web Audio API).
-- Custom signature name in `src/content/site.ts` (currently set to *"من صديقٍ يقدّر الكلمات"*).
+## Final Personalization Pass
+- Integrated Loji's real portrait as an optimized WebP asset in `public/images/loji.webp`.
+- Rewrote the personal letter around her personality, technical passion, the natural matching between both personalities, and the sender's appreciation of her voice and appearance.
+- Signature is now **عابد**.
+- Strengthened the old-world atmosphere with candle-like glow, drifting dust, manuscript ornaments, vintage photo treatment, wood turntable styling, wax-seal motion, and more differentiated poetry scene reveals.
+- Added a visible classic listening list centered on Fairuz and older Arabic classics without falsely embedding copyrighted songs as local audio.
+- The interactive player still uses the existing original procedural vintage ambience until an owned/provided audio file is supplied.
+
+## Remaining Optional Asset
+- A user-provided/local audio file can still be added later under `public/audio/` and configured in `src/content/site.ts`.

@@ -732,3 +732,288 @@
   color: var(--color-ink-faded);
   opacity: 0.75;
 }
+
+
+/* ----------------------------------------------------
+   FINAL VINTAGE ATMOSPHERE & PERSONALIZATION PASS
+   ---------------------------------------------------- */
+.opening-screen {
+  overflow: hidden;
+  box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.72);
+}
+
+.opening-screen::before,
+.opening-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.opening-screen::before {
+  z-index: 0;
+  opacity: 0.34;
+  background-image:
+    radial-gradient(circle at 14% 18%, rgba(255,255,255,.16) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 71% 42%, rgba(255,255,255,.10) 0 1px, transparent 1.4px),
+    radial-gradient(circle at 38% 78%, rgba(255,225,180,.11) 0 1px, transparent 1.8px);
+  background-size: 37px 43px, 53px 61px, 71px 67px;
+  animation: oldDustDrift 16s linear infinite;
+}
+
+.opening-screen::after {
+  z-index: 0;
+  background:
+    radial-gradient(circle at 50% 36%, rgba(219, 167, 105, 0.13), transparent 28%),
+    radial-gradient(circle at 50% 52%, transparent 42%, rgba(0,0,0,.35) 100%);
+  animation: lanternBreath 7s ease-in-out infinite;
+}
+
+.opening-content {
+  position: relative;
+  z-index: 2;
+}
+
+.opening-seal-icon,
+.wax-seal-medallion {
+  position: relative;
+  isolation: isolate;
+}
+
+.opening-seal-icon::after,
+.wax-seal-medallion::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 226, 181, 0.25);
+  box-shadow: inset 0 0 0 2px rgba(20, 4, 8, 0.12);
+}
+
+.manuscript-open .site-wrapper {
+  animation: manuscriptArrival 1.2s cubic-bezier(.16,1,.3,1) both;
+}
+
+.site-wrapper {
+  background:
+    linear-gradient(90deg, transparent 0, rgba(112, 77, 45, .035) 8%, transparent 15% 85%, rgba(112,77,45,.03) 92%, transparent 100%);
+}
+
+.manuscript-scene:not(:last-of-type)::after {
+  content: '❦';
+  position: absolute;
+  bottom: calc(var(--space-sm) * -0.2);
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(112, 76, 46, 0.34);
+  font-family: var(--font-english);
+  font-size: 1.1rem;
+  letter-spacing: .2em;
+}
+
+.hero-composition::before {
+  content: '❧';
+  display: block;
+  margin-bottom: var(--space-sm);
+  color: var(--color-muted-gold);
+  font-family: var(--font-english);
+  font-size: 1.65rem;
+  opacity: .72;
+  animation: ornamentFloat 5s ease-in-out infinite;
+}
+
+.poetry-individual-scene {
+  min-height: 74svh;
+  justify-content: center;
+}
+
+.poetry-individual-scene::before {
+  content: '';
+  position: absolute;
+  inset: 8% -2%;
+  z-index: -1;
+  opacity: .72;
+  background: radial-gradient(circle at center, rgba(255,255,255,.34), transparent 67%);
+}
+
+.poetry-individual-scene.poet-imru::before {
+  background: radial-gradient(circle at 50% 42%, rgba(73,31,38,.05), transparent 68%);
+}
+
+.poetry-individual-scene.original-scene::before {
+  background: radial-gradient(circle at 50% 45%, rgba(164,138,98,.13), transparent 65%);
+}
+
+.poetry-individual-scene .verse-line {
+  text-wrap: balance;
+}
+
+.memory-scene {
+  min-height: 85svh;
+}
+
+.memory-vignette-wrapper {
+  transform: rotate(-1deg);
+}
+
+.vintage-photo-frame {
+  max-width: 300px;
+  aspect-ratio: 9 / 16;
+  padding: 10px 10px 28px;
+  background: #f5eee2;
+  border: 1px solid rgba(106, 78, 48, .33);
+  box-shadow:
+    0 22px 50px rgba(41, 27, 18, .20),
+    0 2px 5px rgba(41, 27, 18, .14),
+    inset 0 0 0 5px rgba(255,255,255,.35);
+  overflow: hidden;
+}
+
+.vintage-photo-frame::before {
+  content: '';
+  position: absolute;
+  inset: 9px 9px 27px;
+  z-index: 2;
+  pointer-events: none;
+  box-shadow: inset 0 0 34px rgba(64, 41, 23, .18);
+}
+
+.vintage-photo-frame::after {
+  content: '٢٠٢٦';
+  position: absolute;
+  right: 16px;
+  bottom: 5px;
+  color: rgba(87, 59, 39, .54);
+  font-family: var(--font-arabic-classic);
+  font-size: .76rem;
+  letter-spacing: .08em;
+}
+
+.vintage-photo-frame img {
+  filter: sepia(.22) saturate(.86) contrast(.96) brightness(.97);
+  opacity: 0;
+  transform: scale(1.035);
+  transition: opacity 1.2s ease, transform 2.2s cubic-bezier(.16,1,.3,1), filter .7s ease;
+}
+
+.vintage-photo-frame img.loaded {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.vintage-photo-frame:hover img {
+  filter: sepia(.08) saturate(.96) contrast(.98);
+}
+
+.music-marginalia {
+  font-family: var(--font-arabic-classic);
+  color: var(--color-muted-gold);
+  font-size: .93rem;
+  letter-spacing: .08em;
+  margin-bottom: var(--space-sm);
+}
+
+.turntable-assembly::before {
+  content: '';
+  position: absolute;
+  inset: -18px;
+  border-radius: 10px;
+  background:
+    repeating-linear-gradient(92deg, rgba(69,39,24,.98) 0 8px, rgba(84,49,29,.98) 8px 16px, rgba(59,34,22,.98) 16px 24px);
+  border: 1px solid rgba(39,20,13,.78);
+  box-shadow: 0 18px 38px rgba(37, 19, 11, .22), inset 0 0 0 2px rgba(212,175,55,.08);
+  transform: rotate(-1.2deg);
+  z-index: 0;
+}
+
+.turntable-vinyl {
+  z-index: 2;
+}
+
+.music-playlist {
+  list-style: none;
+  margin: var(--space-md) 0 0;
+  padding: var(--space-sm) 0 0;
+  width: min(100%, 360px);
+  border-top: 1px solid rgba(164,138,98,.28);
+  display: grid;
+  gap: .35rem;
+}
+
+.music-playlist li {
+  font-family: var(--font-arabic-classic);
+  font-size: .9rem;
+  color: var(--color-ink-faded);
+  line-height: 1.7;
+}
+
+.music-playlist li::before {
+  content: '♪';
+  margin-left: .45rem;
+  color: var(--color-muted-gold);
+}
+
+.birthday-composition::before {
+  content: '✦  ✧  ✦';
+  color: rgba(164,138,98,.58);
+  font-size: 1rem;
+  letter-spacing: .7em;
+  margin-bottom: var(--space-lg);
+  animation: starBreath 5.5s ease-in-out infinite;
+}
+
+.wax-envelope-card {
+  background:
+    linear-gradient(145deg, rgba(250,246,239,.96), rgba(230,218,198,.96)),
+    repeating-linear-gradient(0deg, transparent 0 24px, rgba(110,78,51,.03) 24px 25px);
+}
+
+.wax-seal-medallion {
+  animation: waxBreath 4.8s ease-in-out infinite;
+}
+
+.unfolded-letter-manuscript {
+  background:
+    linear-gradient(rgba(250,246,239,.96), rgba(250,246,239,.96)),
+    repeating-linear-gradient(0deg, transparent 0 27px, rgba(92,65,43,.05) 27px 28px);
+}
+
+.manuscript-colophon {
+  opacity: .56;
+  letter-spacing: .08em;
+}
+
+@media (max-width: 600px) {
+  .manuscript-scene {
+    padding-top: clamp(3.5rem, 10svh, 5rem);
+    padding-bottom: clamp(3.5rem, 10svh, 5rem);
+  }
+
+  .poetry-individual-scene {
+    min-height: 82svh;
+    padding-inline: .25rem;
+  }
+
+  .vintage-photo-frame {
+    width: min(78vw, 290px);
+  }
+
+  .turntable-assembly::before {
+    inset: -12px;
+  }
+
+  .music-playlist {
+    width: min(88vw, 340px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opening-screen::before,
+  .opening-screen::after,
+  .hero-composition::before,
+  .birthday-composition::before,
+  .wax-seal-medallion,
+  .manuscript-open .site-wrapper {
+    animation: none !important;
+  }
+}

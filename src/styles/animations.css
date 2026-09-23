@@ -96,3 +96,36 @@
     animation: none !important;
   }
 }
+
+
+/* Final old-world motion vocabulary */
+@keyframes oldDustDrift {
+  0% { transform: translate3d(0, 0, 0); opacity: .24; }
+  50% { transform: translate3d(-8px, 10px, 0); opacity: .38; }
+  100% { transform: translate3d(-16px, 20px, 0); opacity: .24; }
+}
+
+@keyframes lanternBreath {
+  0%, 100% { opacity: .72; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.018); }
+}
+
+@keyframes manuscriptArrival {
+  0% { opacity: 0; transform: translateY(18px) scale(.992); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes ornamentFloat {
+  0%, 100% { transform: translateY(0); opacity: .62; }
+  50% { transform: translateY(-4px); opacity: .88; }
+}
+
+@keyframes starBreath {
+  0%, 100% { opacity: .38; letter-spacing: .62em; }
+  50% { opacity: .72; letter-spacing: .82em; }
+}
+
+@keyframes waxBreath {
+  0%, 100% { transform: scale(1) rotate(-1deg); box-shadow: 0 6px 20px rgba(73,31,38,.40), inset 0 2px 4px rgba(255,255,255,.2); }
+  50% { transform: scale(1.025) rotate(1deg); box-shadow: 0 9px 26px rgba(73,31,38,.48), inset 0 2px 4px rgba(255,255,255,.24); }
+}

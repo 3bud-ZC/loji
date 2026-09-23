@@ -82,6 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
   stickyAudioToggle?.addEventListener('click', toggleAudio);
   btnMainPlayToggle?.addEventListener('click', toggleAudio);
   turntableVinyl?.addEventListener('click', toggleAudio);
+  turntableVinyl?.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      toggleAudio();
+    }
+  });
 
   // 3. Opening Transition
   const openingScreen = document.getElementById('openingScreen');
@@ -94,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         openingScreen.style.display = 'none';
       }, 950);
     }
+    document.body.classList.add('manuscript-open');
     celebration?.burst(25);
   });
 
@@ -140,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (poetryFlow) {
     siteConfig.poetryMoment.scenes.forEach(scene => {
       const sceneEl = document.createElement('div');
-      sceneEl.className = `poetry-individual-scene reveal-fade ${scene.isOriginal ? 'original-scene' : ''}`;
+      sceneEl.className = `poetry-individual-scene reveal-ink poet-${scene.poetId} ${scene.isOriginal ? 'original-scene' : ''}`;
 
       const versesHtml = scene.verses
         .map(verse => `<p class="verse-line">${verse}</p>`)
@@ -165,6 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (memoryVignetteImg) {
     const v = siteConfig.memories.vignette;
     const resolvedImg = v.imageSrc || placeholderImages[v.placeholderType] || placeholderImages.botanical;
+    memoryVignetteImg.addEventListener('load', () => {
+      memoryVignetteImg.classList.add('loaded');
+    }, { once: true });
     memoryVignetteImg.src = resolvedImg;
     memoryVignetteImg.alt = v.title;
   }
@@ -172,7 +182,17 @@ document.addEventListener('DOMContentLoaded', () => {
     memoryVignetteCaption.textContent = siteConfig.memories.vignette.caption;
   }
 
-  // 7. Personal Wishes (Concise Poetic Fragments)
+  // 7. Classic listening notes
+  const musicPlaylist = document.getElementById('musicPlaylist');
+  if (musicPlaylist) {
+    siteConfig.music.playlist.forEach(track => {
+      const li = document.createElement('li');
+      li.textContent = track;
+      musicPlaylist.appendChild(li);
+    });
+  }
+
+  // 8. Personal Wishes (Concise Poetic Fragments)
   const wishesLines = document.getElementById('wishesLines');
   if (wishesLines) {
     siteConfig.wishes.items.forEach(itemText => {
@@ -182,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 8. Birthday Reveal & Petals
+  // 9. Birthday Reveal & Petals
   const btnPetalsBurst = document.getElementById('btnPetalsBurst');
   btnPetalsBurst?.addEventListener('click', () => {
     celebration?.burst(50);
@@ -202,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     obs.observe(birthdaySection);
   }
 
-  // 9. Final Sealed Letter
+  // 10. Final Sealed Letter
   const waxEnvelope = document.getElementById('waxEnvelope');
   const waxSealBtn = document.getElementById('waxSealBtn');
   const unfoldedLetter = document.getElementById('unfoldedLetter');
@@ -239,13 +259,19 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   waxEnvelope?.addEventListener('click', openLetter);
+  waxEnvelope?.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openLetter();
+    }
+  });
   waxSealBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
     openLetter();
   });
   btnResealLetter?.addEventListener('click', closeLetter);
 
-  // 10. Scroll Observer for Gentle Manuscript Reveals
+  // 11. Scroll Observer for Gentle Manuscript Reveals
   const revealElements = document.querySelectorAll('.reveal-fade, .reveal-ink');
   if ('IntersectionObserver' in window) {
     const revealObserver = new IntersectionObserver((entries, obs) => {
