@@ -36,6 +36,7 @@
   <div id="intro" class="intro" role="dialog" aria-modal="true" aria-label="افتتاح المخطوطة">
     <div class="intro-table" aria-hidden="true"></div>
     <div class="book-shell">
+      <div class="book-page-glow" aria-hidden="true"></div>
       <button id="openExperience" class="book-cover" type="button" aria-label="افتحي المخطوطة">
         <span class="book-frame"></span>
         <span class="book-label font-english">For Loji</span>
@@ -57,7 +58,7 @@
     <section class="chapter chapter-hero" data-scene="hero" id="hero">
       <div class="chapter-inner hero-inner">
         <span class="eyebrow">مخطوطة صغيرة</span>
-        <h1 class="hero-name">لُـجَـيْـن</h1>
+        <h1 id="heroName" class="hero-name" role="button" tabindex="0" aria-label="مفاجأة صغيرة باسم لُجين">لُـجَـيْـن</h1>
         <p class="hero-line">بعض الأسماء تُقال، وبعضها يُروى.</p>
         <span class="hero-note">٢٠٢٦ • إلى لُجين</span>
       </div>
@@ -87,6 +88,7 @@
           <div class="keepsake-tape tape-one"></div>
           <div class="keepsake-tape tape-two"></div>
           <img id="lojiPhoto" src="" alt="لُجين" loading="lazy" decoding="async" />
+          <button id="photoZoomButton" class="photo-zoom-hit" type="button" aria-label="كبّري الصورة"></button>
           <figcaption id="photoCaption">وبعض الصور لا تحتاج شرحًا.</figcaption>
         </figure>
       </div>
@@ -158,6 +160,15 @@
 
     <footer class="story-footer"><span>لُجين • ٢٠٢٦</span></footer>
   </main>
+
+  <div id="photoLightbox" class="photo-lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="صورة لُجين مكبرة">
+    <button id="photoLightboxClose" class="photo-lightbox-close" type="button" aria-label="إغلاق الصورة">×</button>
+    <img id="photoLightboxImage" alt="لُجين" />
+  </div>
+
+  <div id="secretToast" class="secret-toast" role="status" aria-live="polite">
+    قلتلك إن اسمك يليق بقصيدة.
+  </div>
 
   <script type="module" src="/src/main.ts"></script>
 </body>

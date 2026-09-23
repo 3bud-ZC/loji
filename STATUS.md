@@ -1,7 +1,7 @@
 # Project Status: Loji Birthday Poetic Experience
 
 ## Current Completion State
-- **Status:** Clean Rebuild + Premium Polish — Deployed & Verified
+- **Status:** Final Experience Polish — Implemented / Deploying
 - **Repository:** https://github.com/3bud-ZC/loji.git
 - **Live URL:** https://3bud-zc.github.io/loji/
 
@@ -42,3 +42,16 @@
 - Narrowed and refined the envelope/final letter for better iPhone readability.
 - Added restrained micro-choreography for worlds, record player, wishes note, birthday name, and envelope.
 - Shortened and reduced the birthday particle effect so petals do not visually bleed into the final letter.
+
+
+## Final Experience Polish
+- Preserved the approved visual design and section order; no redesign was introduced.
+- Deepened the manuscript opening with page-light spill and subtler leather/page texture while retaining the same book-cover composition.
+- Added a lightweight portrait lightbox so Loji's single photo can be viewed full-screen without introducing a gallery.
+- Added subtle scroll parallax to the moon/background only; no scroll-jacking or heavy continuous effects.
+- Added a one-time restrained birthday petal burst on first arrival, while keeping the manual "انثري الورد" interaction.
+- Added a handwriting-style reveal for the **عابد** signature inside the final letter.
+- Added one discreet easter egg on Loji's hero name: "قلتلك إن اسمك يليق بقصيدة."
+- Refactored `src/main.ts` into focused rendering and interaction functions.
+- No new JavaScript dependencies were added.
+- Fairuz remains a listening/vibe reference only; no copyrighted recording was bundled without a supplied audio file.
