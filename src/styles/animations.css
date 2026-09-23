@@ -1,0 +1,121 @@
+/* Animation Keyframes and Transitions */
+
+@keyframes spinVinyl {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulseRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes letterUnfold {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96) rotateX(15deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+  }
+}
+
+@keyframes sealCrack {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15) rotate(4deg);
+  }
+  100% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+}
+
+@keyframes inkFlowIn {
+  0% {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+.opening-greeting {
+  animation: inkFlowIn 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s backwards;
+}
+
+.opening-poetic-line {
+  animation: inkFlowIn 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) 1.2s backwards;
+}
+
+.btn-open-manuscript {
+  animation: inkFlowIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) 2.2s backwards;
+}
+
+@keyframes inkReveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-float {
+  animation: subtleFloat 4s ease-in-out infinite;
+}
+
+.reveal-fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .turntable-vinyl.spinning {
+    animation: none !important;
+  }
+  .animate-float {
+    animation: none !important;
+  }
+  .reveal-fade-up {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .unfolded-letter {
+    animation: none !important;
+  }
+}

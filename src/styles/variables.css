@@ -1,0 +1,68 @@
+:root {
+  /* Color Palette */
+  --color-ivory: #F0E8DA;
+  --color-ivory-light: #F9F5EE;
+  --color-parchment: #E8DEC8;
+  --color-parchment-border: #D5C8A8;
+  --color-parchment-dark: #DECFA8;
+
+  --color-burgundy: #491F26;
+  --color-burgundy-deep: #250B10;
+  --color-burgundy-rich: #63222D;
+  --color-burgundy-light: #8E3846;
+
+  --color-ink: #1C1A18;
+  --color-ink-muted: #3B3733;
+  --color-ink-faded: #6B645D;
+  --color-ink-light: #9B9287;
+
+  --color-muted-gold: #A48A62;
+  --color-gold-light: #CBB48C;
+  --color-gold-accent: #D4AF37;
+  --color-gold-deep: #7D643E;
+
+  --color-olive: #535340;
+  --color-olive-faded: #73735C;
+  --color-olive-light: #949479;
+
+  /* Typography */
+  --font-arabic-classic: 'Amiri', 'Traditional Arabic', serif;
+  --font-arabic-accent: 'Aref Ruqaa', 'Amiri', serif;
+  --font-english: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+
+  /* Fluid Spacing */
+  --space-3xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.375rem);
+  --space-2xs: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem);
+  --space-xs: clamp(0.75rem, 0.6rem + 0.75vw, 1rem);
+  --space-sm: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+  --space-md: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
+  --space-lg: clamp(2rem, 1.6rem + 2vw, 3rem);
+  --space-xl: clamp(3rem, 2.4rem + 3vw, 4.5rem);
+  --space-2xl: clamp(4rem, 3.2rem + 4vw, 6rem);
+
+  /* Layout */
+  --container-max-width: 820px;
+  --container-reading-width: 680px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Safe Area Insets for iOS Safari */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+
+  /* Shadows */
+  --shadow-subtle: 0 2px 8px rgba(28, 26, 24, 0.08);
+  --shadow-paper: 0 4px 20px rgba(28, 26, 24, 0.12), 0 1px 3px rgba(28, 26, 24, 0.06);
+  --shadow-deep: 0 12px 32px rgba(28, 26, 24, 0.22);
+  --shadow-wax: 0 6px 18px rgba(73, 31, 38, 0.35);
+
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-medium: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-paper: 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}

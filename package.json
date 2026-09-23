@@ -1,0 +1,36 @@
+{
+  "name": "loji",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "node scripts/verify-build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/3bud-ZC/loji.git"
+  },
+  "keywords": [
+    "birthday",
+    "poetry",
+    "arabic",
+    "cinematic",
+    "manuscript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/node": "^26.6.2",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0"
+  },
+  "dependencies": {
+    "canvas-confetti": "^1.9.4",
+    "gsap": "^3.15.0"
+  }
+}

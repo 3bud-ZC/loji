@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="calliBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F2EAE0" />
+      <stop offset="50%" stop-color="#E8DDCF" />
+      <stop offset="100%" stop-color="#DFD2C0" />
+    </linearGradient>
+    <filter id="inkSpread">
+      <feDropShadow dx="0" dy="1" stdDeviation="0.8" flood-color="#1C1A18" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <rect width="400" height="500" fill="url(#calliBg)"/>
+  
+  <!-- Outer double manuscript frame (Tazhib style) -->
+  <rect x="25" y="25" width="350" height="450" fill="none" stroke="#A48A62" stroke-width="1.5"/>
+  <rect x="32" y="32" width="336" height="436" fill="none" stroke="#491F26" stroke-width="0.75" opacity="0.6"/>
+
+  <!-- Ornaments on corners -->
+  <path d="M25,50 L50,25 M375,50 L350,25 M25,450 L50,475 M375,450 L350,475" stroke="#A48A62" stroke-width="1"/>
+
+  <!-- Classical Calligraphic Composition in Arabic -->
+  <g transform="translate(200, 220)" filter="url(#inkSpread)">
+    <!-- Central decorative medallion -->
+    <circle cx="0" cy="0" r="110" fill="none" stroke="#A48A62" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+    <circle cx="0" cy="0" r="95" fill="none" stroke="#491F26" stroke-width="0.8" opacity="0.3"/>
+
+    <!-- Calligraphy Lines (Thuluth/Ruqaa styled Arabic glyphs) -->
+    <text x="0" y="-45" font-family="'Amiri', 'Aref Ruqaa', serif" font-size="28" font-weight="bold" fill="#1C1A18" text-anchor="middle">
+      يا غائباً والحشا مغناهُ
+    </text>
+    <text x="0" y="5" font-family="'Amiri', 'Aref Ruqaa', serif" font-size="24" fill="#491F26" text-anchor="middle">
+      إن غبتَ عن ناظري فالله يرعاكَ
+    </text>
+    
+    <!-- Gold ornament flourish -->
+    <path d="M-60,40 Q0,55 60,40 Q0,48 -60,40" fill="#A48A62"/>
+    <circle cx="0" cy="46" r="3" fill="#491F26"/>
+  </g>
+
+  <!-- Footnote -->
+  <text x="200" y="440" font-family="'Amiri', serif" font-size="15" fill="#535340" text-anchor="middle" font-style="italic">
+    مخطوط ديوان العشاق • طبعة نادرة
+  </text>
+</svg>

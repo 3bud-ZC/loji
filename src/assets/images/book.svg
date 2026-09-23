@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bookBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F5EEE4" />
+      <stop offset="100%" stop-color="#E5D9C7" />
+    </linearGradient>
+    <linearGradient id="bookCover" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#55222A" />
+      <stop offset="60%" stop-color="#3B171D" />
+      <stop offset="100%" stop-color="#240D12" />
+    </linearGradient>
+    <filter id="bookShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="8" stdDeviation="7" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <rect width="400" height="500" fill="url(#bookBg)"/>
+  
+  <rect x="25" y="25" width="350" height="450" fill="none" stroke="#A48A62" stroke-width="0.8" opacity="0.4"/>
+
+  <!-- Antique Open / Leatherbound Book Motif -->
+  <g transform="translate(200, 225)" filter="url(#bookShadow)">
+    <!-- Book Leather Cover -->
+    <rect x="-115" y="-140" width="230" height="280" rx="8" fill="url(#bookCover)"/>
+    
+    <!-- Gold Embossed Tooling on Cover -->
+    <rect x="-105" y="-130" width="210" height="260" rx="4" fill="none" stroke="#D4AF37" stroke-width="1.2" opacity="0.75"/>
+    <rect x="-98" y="-123" width="196" height="246" rx="2" fill="none" stroke="#A48A62" stroke-width="0.5" opacity="0.6"/>
+
+    <!-- Spine lines -->
+    <line x1="-85" y1="-140" x2="-85" y2="140" stroke="#1D0A0E" stroke-width="3"/>
+    <line x1="-83" y1="-140" x2="-83" y2="140" stroke="#D4AF37" stroke-width="0.6" opacity="0.5"/>
+
+    <!-- Gold Center Emblem on Cover -->
+    <circle cx="20" cy="-10" r="42" fill="none" stroke="#D4AF37" stroke-width="1.2" opacity="0.85"/>
+    <circle cx="20" cy="-10" r="36" fill="none" stroke="#A48A62" stroke-width="0.6" stroke-dasharray="2 2"/>
+    
+    <text x="20" y="-16" font-family="'Amiri', serif" font-size="13" fill="#D4AF37" text-anchor="middle">
+      ديوان
+    </text>
+    <text x="20" y="8" font-family="'Amiri', serif" font-size="20" font-weight="bold" fill="#F0E8DA" text-anchor="middle">
+      لُـجَـيْـن
+    </text>
+    <text x="20" y="24" font-family="'Cormorant Garamond', serif" font-size="10" font-style="italic" fill="#CBB48C" text-anchor="middle">
+      Anthology of Grace
+    </text>
+
+    <!-- Crimson Bookmark Ribbon hanging from bottom -->
+    <path d="M0,135 L0,175 L8,165 L16,175 L16,135 Z" fill="#843845" opacity="0.95"/>
+  </g>
+
+  <!-- Handwritten quote caption -->
+  <text x="200" y="440" font-family="'Amiri', serif" font-size="15" fill="#1C1A18" text-anchor="middle" font-style="italic">
+    بين دفتي كتاب • حياةٌ أخرى
+  </text>
+</svg>
