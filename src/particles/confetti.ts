@@ -64,7 +64,7 @@ export class PoeticCelebration {
     }
 
     const isMobile = this.width < 600;
-    const adjustedCount = isMobile ? Math.min(count, 45) : count;
+    const adjustedCount = isMobile ? Math.min(count, 24) : Math.min(count, 42);
 
     for (let i = 0; i < adjustedCount; i++) {
       this.particles.push(this.createParticle());
@@ -85,7 +85,7 @@ export class PoeticCelebration {
     if (rand < 0.45) {
       type = 'petal';
       color = this.petalColors[Math.floor(Math.random() * this.petalColors.length)];
-      size = 8 + Math.random() * 8;
+      size = 6 + Math.random() * 6;
     } else if (rand < 0.8) {
       type = 'dust';
       color = this.goldColors[Math.floor(Math.random() * this.goldColors.length)];
@@ -100,7 +100,7 @@ export class PoeticCelebration {
       x: Math.random() * this.width,
       y: -20 - Math.random() * (this.height * 0.3),
       vx: (Math.random() - 0.5) * 1.5,
-      vy: 1.2 + Math.random() * 2.2,
+      vy: 1.45 + Math.random() * 2.35,
       size,
       type,
       color,
@@ -109,9 +109,9 @@ export class PoeticCelebration {
       wobble: Math.random() * Math.PI * 2,
       wobbleSpeed: 0.02 + Math.random() * 0.03,
       opacity: 0.8 + Math.random() * 0.2,
-      fadeSpeed: 0.002 + Math.random() * 0.003,
+      fadeSpeed: 0.004 + Math.random() * 0.004,
       life: 0,
-      maxLife: 260 + Math.random() * 140
+      maxLife: 170 + Math.random() * 100
     };
   }
 
@@ -129,7 +129,7 @@ export class PoeticCelebration {
       p.x += p.vx + Math.sin(p.wobble) * 1.1;
       p.y += p.vy;
 
-      if (p.life > p.maxLife * 0.7) {
+      if (p.life > p.maxLife * 0.56) {
         p.opacity -= p.fadeSpeed;
       }
 
