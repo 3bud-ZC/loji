@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         openingScreen.style.display = 'none';
       }
     }
-    celebration?.burst(22);
+    // Opening stays quiet; the book-opening motion is the moment.
   });
 
   // 4. Her Little World (Spatial Editorial)
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 9. Birthday Reveal & Petals
   const btnPetalsBurst = document.getElementById('btnPetalsBurst');
   btnPetalsBurst?.addEventListener('click', () => {
-    celebration?.burst(50);
+    celebration?.burst(24);
   });
 
   const birthdaySection = document.getElementById('birthday-reveal');
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
       entries.forEach(entry => {
         if (entry.isIntersecting && !hasBurst) {
           hasBurst = true;
-          celebration?.burst(35);
+          celebration?.burst(18);
         }
       });
     }, { threshold: 0.35 });
@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
       waxEnvelope.style.display = 'none';
       unfoldedLetter.classList.add('open');
       unfoldedLetter.setAttribute('aria-hidden', 'false');
-      celebration?.burst(50);
+      celebration?.burst(10);
     }
   };
 

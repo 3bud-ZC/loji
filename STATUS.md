@@ -1,7 +1,7 @@
 # Project Status: Loji Birthday Poetic Experience
 
 ## Current Completion State
-- **Status:** Cinematic Old-World Rebuild — Implementing / Deploying
+- **Status:** Cohesion & Mobile Flow Pass — Implemented / Deploying
 - **Repository:** https://github.com/3bud-ZC/loji.git
 - **Verified Live URL:** https://3bud-zc.github.io/loji/
 
@@ -48,3 +48,15 @@
 - Added GSAP + ScrollTrigger choreography for chapter-aware transitions, poetry line reveals, photo depth/parallax, turntable entrance, wish-line sequencing, and the birthday name reveal.
 - Rebuilt the procedural audio engine for a louder and more reliable user-triggered Arabic/Hijaz-inspired instrumental (oud-like plucks, ney-like lead, frame drum, vinyl texture) with explicit iOS AudioContext resume handling.
 - Actual Fairuz recordings are not bundled; visible Fairuz titles are inspiration/listening references only.
+
+
+## Cohesion & Mobile Flow Pass
+- Reworked all chapter backgrounds into one continuous midnight/oxblood visual world with soft top/bottom blending instead of hard beige/dark cuts.
+- Reduced oversized section heights and mobile dead space; poetry scenes now flow in shorter cinematic chapters.
+- Converted the wishes section into a single parchment insert floating inside the same dark environment instead of a full beige page.
+- Simplified the poetry framing, reduced the oversized oval treatment, tightened line rhythm, and softened atmospheric objects.
+- Integrated the portrait more naturally as a smaller keepsake with restrained depth and glow.
+- Reduced the gramophone scale and mobile playlist clutter; only the first listening reference remains visible on small screens.
+- Shrunk the persistent mobile audio control to a discreet circular control.
+- Reduced celebration particle counts so the birthday climax remains poetic rather than party-like.
+- Unified reveal timing around blur-settle + drift + soft scale for smoother transitions.

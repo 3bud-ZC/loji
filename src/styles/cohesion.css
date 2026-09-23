@@ -1,0 +1,609 @@
+/* ============================================================
+   FINAL COHESION PASS
+   One continuous old-world night, softer chapter transitions,
+   tighter mobile rhythm, less visual fragmentation.
+   ============================================================ */
+
+:root {
+  --flow-bg: #090608;
+  --flow-ink: #f2e6d1;
+  --flow-gold: #c7a66f;
+  --flow-wine: #5f2230;
+  --flow-paper: #e7d6b7;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--flow-bg);
+}
+
+body {
+  background: var(--flow-bg) !important;
+}
+
+/* One continuous atmosphere: every chapter fades into the same world. */
+.manuscript-scene {
+  min-height: auto !important;
+  padding: clamp(4.25rem, 8svh, 6.5rem) max(1.05rem, env(safe-area-inset-left)) !important;
+  margin: 0 !important;
+  box-shadow:
+    inset 0 72px 76px -76px #090608,
+    inset 0 -72px 76px -76px #090608;
+}
+
+.manuscript-scene::after {
+  content: '' !important;
+  display: block !important;
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  inset: auto 8% 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(199,166,111,.15), transparent);
+}
+
+.manuscript-scene > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Remove full-screen color cuts. Keep one midnight family with gentle tint shifts. */
+.scene-parchment,
+.scene-study,
+.scene-night,
+.scene-photo,
+.scene-gramophone,
+.scene-scroll,
+.scene-birthday-night,
+.scene-letter {
+  color: var(--flow-ink) !important;
+  background-color: #090608 !important;
+}
+
+.scene-parchment {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(111,70,47,.18), transparent 34%),
+    linear-gradient(180deg, #0b0809 0%, #10090b 52%, #090608 100%) !important;
+}
+
+.scene-study {
+  background:
+    radial-gradient(circle at 50% 46%, rgba(117,88,50,.16), transparent 38%),
+    linear-gradient(180deg, #0a0808 0%, #11100d 50%, #090608 100%) !important;
+}
+
+.scene-night {
+  background:
+    radial-gradient(circle at 70% 18%, rgba(38,55,86,.22), transparent 28%),
+    radial-gradient(circle at 26% 68%, rgba(86,36,55,.18), transparent 32%),
+    linear-gradient(180deg, #080a11 0%, #09070d 58%, #090608 100%) !important;
+}
+
+.scene-photo {
+  background:
+    radial-gradient(circle at 50% 44%, rgba(130,76,40,.18), transparent 32%),
+    linear-gradient(180deg, #0d0806 0%, #120b08 50%, #090608 100%) !important;
+}
+
+.scene-gramophone {
+  background:
+    radial-gradient(circle at 50% 45%, rgba(116,39,48,.25), transparent 35%),
+    linear-gradient(180deg, #100709 0%, #12080a 54%, #090608 100%) !important;
+}
+
+.scene-scroll {
+  background:
+    radial-gradient(circle at 50% 46%, rgba(134,87,50,.13), transparent 34%),
+    linear-gradient(180deg, #0b0808 0%, #100b09 55%, #090608 100%) !important;
+}
+
+.scene-birthday-night {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(115,45,63,.23), transparent 28%),
+    radial-gradient(circle at 76% 18%, rgba(46,65,97,.14), transparent 24%),
+    linear-gradient(180deg, #090811 0%, #10070b 58%, #090608 100%) !important;
+}
+
+.scene-letter {
+  background:
+    radial-gradient(circle at 50% 40%, rgba(104,39,49,.21), transparent 34%),
+    linear-gradient(180deg, #0e0709 0%, #0b0607 62%, #090608 100%) !important;
+}
+
+/* Chapter heights: compact enough to flow, still cinematic. */
+.hero-scene { min-height: 88svh !important; }
+.world-scene { min-height: 76svh !important; }
+.poetry-sequence-scene { padding-block: 1.5rem !important; }
+.memory-scene { min-height: 82svh !important; }
+.music-scene { min-height: 88svh !important; }
+.wishes-scene { min-height: 78svh !important; }
+.birthday-scene { min-height: 92svh !important; }
+.letter-scene { min-height: 86svh !important; }
+
+/* Hero now belongs to the same night instead of feeling like a separate beige page. */
+.hero-composition {
+  width: min(92vw, 610px);
+  padding: 2rem 1.2rem;
+}
+
+.display-hero {
+  color: #e3c28a !important;
+  text-shadow:
+    0 0 28px rgba(227,194,138,.08),
+    0 16px 50px rgba(0,0,0,.28) !important;
+}
+
+.hero-subtitle {
+  color: rgba(244,232,211,.86) !important;
+  max-width: 430px;
+}
+
+.hero-annotation {
+  color: rgba(199,166,111,.64) !important;
+}
+
+.hero-orbit {
+  opacity: .09 !important;
+}
+
+/* Her world: tighter, intentional 2x2 editorial composition on mobile. */
+.world-scene .editorial-heading {
+  margin-bottom: 1.45rem !important;
+}
+
+.world-editorial-composition {
+  gap: 1.45rem !important;
+}
+
+.world-words-row {
+  width: min(100%, 440px);
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .8rem 1rem !important;
+}
+
+.world-word-btn {
+  min-height: 52px;
+  border: 1px solid rgba(199,166,111,.08) !important;
+  border-radius: 999px;
+  background: rgba(255,255,255,.015) !important;
+  padding: .55rem .7rem !important;
+  color: rgba(239,226,203,.68) !important;
+}
+
+.world-word-btn::after { display: none !important; }
+
+.world-word-btn.active {
+  border-color: rgba(199,166,111,.28) !important;
+  background: rgba(117,75,50,.10) !important;
+  color: #e4c38c !important;
+  transform: translateY(-1px) !important;
+}
+
+.world-reflection-display {
+  min-height: 3.8rem !important;
+  max-width: 390px !important;
+}
+
+.reflection-text {
+  color: rgba(247,235,214,.88) !important;
+  font-size: clamp(1rem, 4.8vw, 1.22rem) !important;
+}
+
+.astrolabe-mark {
+  width: 125px !important;
+  height: 125px !important;
+  opacity: .055 !important;
+}
+
+/* Poetry becomes one flowing night, not three bordered slides. */
+.poetry-flow {
+  width: min(100%, 690px) !important;
+}
+
+.poetry-individual-scene {
+  min-height: 78svh !important;
+  padding: 9svh 1rem !important;
+}
+
+.poetry-individual-scene::before {
+  inset: 18% 9% !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background:
+    radial-gradient(circle at center, rgba(95,62,74,.075), transparent 66%) !important;
+  transform: none !important;
+}
+
+.poetry-individual-scene::after {
+  content: '';
+  position: absolute;
+  width: min(42vw, 160px);
+  height: 1px;
+  top: 17%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(199,166,111,.22), transparent);
+}
+
+.scene-poet-name {
+  color: #d9b779 !important;
+  margin-bottom: 1.35rem !important;
+}
+
+.poetry-verses-group {
+  gap: .25rem !important;
+  margin: .65rem 0 1.25rem !important;
+}
+
+.verse-line {
+  color: rgba(248,238,219,.94) !important;
+  line-height: 2.05 !important;
+}
+
+.scene-annotation {
+  max-width: 560px;
+  color: rgba(208,190,158,.66) !important;
+}
+
+.poetry-horizon {
+  height: 20vh !important;
+  opacity: .13 !important;
+}
+
+/* Photo is a keepsake floating inside the same dark desk, not a separate page. */
+.memory-vignette-wrapper {
+  max-width: 360px !important;
+}
+
+.memory-vignette-wrapper::before {
+  content: '';
+  position: absolute;
+  width: 120%;
+  height: 82%;
+  left: -10%;
+  top: 7%;
+  background: radial-gradient(circle, rgba(191,115,58,.12), transparent 68%);
+  filter: blur(20px);
+  z-index: -1;
+}
+
+.vintage-photo-frame {
+  width: min(70vw, 305px) !important;
+  max-width: 305px !important;
+  transform: rotate(-1.8deg) !important;
+  box-shadow:
+    0 30px 70px rgba(0,0,0,.42),
+    0 4px 12px rgba(0,0,0,.28) !important;
+}
+
+.vignette-caption {
+  margin-top: 1.3rem !important;
+  color: rgba(229,209,177,.72) !important;
+}
+
+/* Gramophone: smaller, calmer and better integrated. */
+.music-composition {
+  max-width: 420px !important;
+}
+
+.turntable-assembly {
+  width: clamp(218px, 60vw, 282px) !important;
+  height: clamp(218px, 60vw, 282px) !important;
+  margin-top: .4rem !important;
+  margin-bottom: 1.35rem !important;
+}
+
+.turntable-assembly::before {
+  inset: -18px !important;
+  box-shadow:
+    0 22px 54px rgba(0,0,0,.43),
+    inset 0 0 0 1px rgba(220,184,120,.08) !important;
+}
+
+.music-marginalia {
+  margin-bottom: 1rem !important;
+  opacity: .78;
+}
+
+.sound-status {
+  margin-top: .8rem !important;
+  opacity: .72;
+}
+
+.music-playlist {
+  margin-top: 1rem !important;
+  padding-top: .8rem !important;
+  max-width: 330px;
+}
+
+/* Wishes: the only deliberate parchment insert, floating inside the same night. */
+.wishes-scene {
+  display: flex;
+  align-items: center;
+}
+
+.wishes-composition {
+  width: min(92vw, 440px) !important;
+  padding: clamp(2.2rem, 7vw, 3rem) clamp(1.25rem, 5vw, 2rem);
+  border: 1px solid rgba(210,181,132,.32);
+  border-radius: 6px;
+  background:
+    linear-gradient(rgba(234,219,193,.965), rgba(224,204,172,.965)),
+    repeating-linear-gradient(90deg, transparent 0 35px, rgba(91,58,33,.02) 36px 37px);
+  box-shadow:
+    0 28px 72px rgba(0,0,0,.40),
+    inset 0 0 60px rgba(117,76,43,.06);
+  color: #2b2119 !important;
+  transform: rotate(.35deg);
+}
+
+.wishes-composition::before,
+.wishes-composition::after {
+  content: '';
+  position: absolute;
+  width: 44px;
+  height: 15px;
+  top: -7px;
+  background: rgba(188,160,116,.22);
+  box-shadow: 0 2px 5px rgba(54,35,22,.12);
+}
+.wishes-composition::before { left: 18%; transform: rotate(-6deg); }
+.wishes-composition::after { right: 18%; transform: rotate(5deg); }
+
+.wishes-leadin {
+  color: #7a5135 !important;
+  margin-bottom: 1.2rem !important;
+}
+
+.wishes-lines {
+  gap: .55rem !important;
+}
+
+.wishes-lines li {
+  color: #2f271f !important;
+  font-size: clamp(1.05rem, 4.8vw, 1.28rem) !important;
+  line-height: 1.8 !important;
+}
+
+/* Birthday: more glow, less party UI. */
+.birthday-composition {
+  max-width: 520px !important;
+}
+
+.birthday-composition::before {
+  margin-bottom: 1.3rem !important;
+  opacity: .45;
+}
+
+.birthday-name {
+  color: #e4c084 !important;
+  text-shadow:
+    0 0 34px rgba(228,192,132,.13),
+    0 18px 60px rgba(0,0,0,.35) !important;
+}
+
+.btn-petals-action {
+  margin-top: .6rem;
+  border-radius: 999px !important;
+  padding: .62rem 1.4rem !important;
+  opacity: .78;
+}
+
+.btn-petals-action:hover,
+.btn-petals-action:active {
+  opacity: 1;
+}
+
+/* Letter feels like the final reward, not a generic card. */
+.letter-interaction-wrapper {
+  max-width: 500px !important;
+}
+
+.wax-envelope-card {
+  width: min(92vw, 470px) !important;
+  padding: clamp(3.2rem, 8vw, 4.7rem) 1.4rem !important;
+  border-radius: 10px !important;
+  border-color: rgba(189,154,102,.25) !important;
+  background:
+    linear-gradient(145deg, rgba(229,211,181,.98), rgba(201,177,141,.98)) !important;
+  box-shadow:
+    0 35px 82px rgba(0,0,0,.44),
+    inset 0 0 70px rgba(102,62,34,.08) !important;
+}
+
+.wax-seal-medallion {
+  width: 78px !important;
+  height: 78px !important;
+}
+
+.unfolded-letter-manuscript {
+  width: min(92vw, 540px) !important;
+  border-radius: 8px !important;
+}
+
+/* Floating audio should not compete with the story. */
+.sticky-audio-bar {
+  left: max(.75rem, env(safe-area-inset-left)) !important;
+  bottom: calc(.8rem + var(--safe-bottom)) !important;
+  min-height: 48px !important;
+  padding: .22rem .45rem .22rem .25rem !important;
+  gap: .35rem !important;
+  border-radius: 999px !important;
+  background: rgba(12,8,9,.66) !important;
+  backdrop-filter: blur(12px) saturate(.85) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(.85) !important;
+  border: 1px solid rgba(198,164,105,.18) !important;
+  box-shadow: 0 10px 32px rgba(0,0,0,.25) !important;
+}
+
+.audio-btn-icon {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  background: rgba(111,37,50,.78) !important;
+}
+
+.audio-bar-text {
+  max-width: 90px !important;
+  font-size: .78rem !important;
+  color: rgba(234,216,185,.76) !important;
+}
+
+/* Unified reveal vocabulary. */
+.reveal-fade {
+  opacity: 0;
+  transform: translateY(18px) scale(.992);
+  filter: blur(3px);
+  transition:
+    opacity .95s cubic-bezier(.16,1,.3,1),
+    transform 1.05s cubic-bezier(.16,1,.3,1),
+    filter .85s ease;
+}
+
+.reveal-fade.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+.reveal-ink {
+  opacity: 0;
+  transform: translateY(14px) scale(.994);
+  filter: blur(5px);
+  transition:
+    opacity 1.05s ease,
+    transform 1.15s cubic-bezier(.16,1,.3,1),
+    filter 1.1s ease;
+}
+
+.reveal-ink.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+/* Background objects should support the scene, not dominate it. */
+.arched-window {
+  opacity: .08 !important;
+}
+
+body[data-scene="poetry"] .arched-window,
+body[data-scene="birthday"] .arched-window {
+  opacity: .36 !important;
+}
+
+body[data-scene="memory"] .candle,
+body[data-scene="music"] .candle,
+body[data-scene="letter"] .candle {
+  opacity: .48 !important;
+}
+
+.dust-layer { opacity: .075 !important; }
+.floating-page { opacity: .055 !important; }
+body[data-scene="memory"] .floating-page,
+body[data-scene="letter"] .floating-page { opacity: .10 !important; }
+.ink-ribbon { opacity: .07 !important; }
+
+/* Mobile-specific rhythm based on the iPhone screenshots. */
+@media (max-width: 700px) {
+  .manuscript-scene {
+    padding: clamp(3.7rem, 7.5svh, 5rem) 1.05rem !important;
+  }
+
+  .hero-scene { min-height: 82svh !important; }
+  .world-scene { min-height: 70svh !important; }
+  .poetry-individual-scene {
+    min-height: 72svh !important;
+    padding: 7svh .45rem !important;
+  }
+  .memory-scene { min-height: 76svh !important; }
+  .music-scene { min-height: 82svh !important; }
+  .wishes-scene { min-height: 72svh !important; }
+  .birthday-scene { min-height: 86svh !important; }
+  .letter-scene { min-height: 80svh !important; }
+
+  .world-words-row {
+    width: min(100%, 330px);
+  }
+
+  .world-word-btn {
+    font-size: clamp(1.05rem, 5.1vw, 1.35rem) !important;
+  }
+
+  .poetry-individual-scene::after {
+    top: 13%;
+  }
+
+  .vintage-photo-frame {
+    width: min(68vw, 286px) !important;
+  }
+
+  .turntable-assembly {
+    width: min(58vw, 255px) !important;
+    height: min(58vw, 255px) !important;
+  }
+
+  .music-playlist {
+    width: min(84vw, 310px) !important;
+  }
+
+  .music-playlist li:nth-child(n+2) {
+    display: none;
+  }
+
+  .music-playlist li {
+    font-size: .82rem !important;
+  }
+
+  .sticky-audio-bar {
+    width: 48px !important;
+    height: 48px !important;
+    padding: 4px !important;
+    justify-content: center;
+  }
+
+  .audio-bar-text {
+    display: none !important;
+  }
+
+  .audio-btn-icon {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .arched-window {
+    width: 40vw !important;
+    right: -11vw !important;
+  }
+
+  .candle {
+    transform: scale(.72) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .manuscript-scene {
+    padding-inline: .9rem !important;
+  }
+
+  .verse-line {
+    font-size: 1.08rem !important;
+  }
+
+  .wishes-composition {
+    width: 94vw !important;
+    padding-inline: 1.05rem !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-fade,
+  .reveal-ink {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
