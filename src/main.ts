@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const poetryStack = document.getElementById('poetryStack');
   siteConfig.poetryMoment.scenes.forEach(scene => {
     const article = document.createElement('article');
-    article.className = 'poetry-card' + (scene.isOriginal ? ' is-original' : '');
+    article.className = 'poetry-card poet-' + scene.poetId + (scene.isOriginal ? ' is-original' : '');
 
     const name = document.createElement('span');
     name.className = 'poet-name';
@@ -304,6 +304,54 @@ document.addEventListener('DOMContentLoaded', () => {
         end: 'bottom top',
         scrub: 1.1
       }
+    });
+
+    // Premium micro choreography for the approved layout.
+    gsap.from('.world-word', {
+      opacity: 0,
+      y: 14,
+      stagger: .07,
+      duration: .55,
+      ease: 'power2.out',
+      scrollTrigger: { trigger: '#world', start: 'top 68%' }
+    });
+
+    gsap.from('.record-player', {
+      opacity: 0,
+      y: 28,
+      scale: .96,
+      rotate: -1.2,
+      duration: .8,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '#music', start: 'top 70%' }
+    });
+
+    gsap.from('.paper-note', {
+      opacity: 0,
+      y: 30,
+      rotate: -1.1,
+      scale: .975,
+      duration: .85,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '#wishes', start: 'top 72%' }
+    });
+
+    gsap.from('.birthday-name', {
+      opacity: 0,
+      scale: .9,
+      filter: 'blur(6px)',
+      duration: .9,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '#birthday', start: 'top 68%' }
+    });
+
+    gsap.from('.letter-envelope', {
+      opacity: 0,
+      y: 26,
+      scale: .975,
+      duration: .8,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '#letter', start: 'top 72%' }
     });
   }
 
