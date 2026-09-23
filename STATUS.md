@@ -1,7 +1,7 @@
 # Project Status: Loji Birthday Poetic Experience
 
 ## Current Completion State
-- **Status:** Final Personalized Release — Deployed
+- **Status:** Cinematic Old-World Rebuild — Implementing / Deploying
 - **Repository:** https://github.com/3bud-ZC/loji.git
 - **Verified Live URL:** https://3bud-zc.github.io/loji/
 
@@ -40,3 +40,11 @@
 
 ## Remaining Optional Asset
 - A user-provided/local audio file can still be added later under `public/audio/` and configured in `src/content/site.ts`.
+
+
+## Cinematic Old-World Rebuild
+- Reframed the experience from a flat parchment page into full-screen cinematic chapters: parchment, study, moonlit poetry, dark photo desk, gramophone room, scroll, midnight birthday, and sealed-letter finale.
+- Added a persistent animated environment with an arched moon window, stars, candles/flames, drifting dust, floating pages, ink ribbons, film-burn treatment, astrolabe ornamentation, and scene-aware background transitions.
+- Added GSAP + ScrollTrigger choreography for chapter-aware transitions, poetry line reveals, photo depth/parallax, turntable entrance, wish-line sequencing, and the birthday name reveal.
+- Rebuilt the procedural audio engine for a louder and more reliable user-triggered Arabic/Hijaz-inspired instrumental (oud-like plucks, ney-like lead, frame drum, vinyl texture) with explicit iOS AudioContext resume handling.
+- Actual Fairuz recordings are not bundled; visible Fairuz titles are inspiration/listening references only.

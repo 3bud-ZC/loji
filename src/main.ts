@@ -2,6 +2,10 @@ import { siteConfig } from './content/site';
 import { VintageAudioPlayer } from './audio/player';
 import { PoeticCelebration } from './particles/confetti';
 import { icons } from './utils/icons';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Asset URLs handled by Vite
 import botanicalSvg from './assets/images/botanical.svg';
@@ -38,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mainPlayBtnText = document.getElementById('mainPlayBtnText');
   const turntableVinyl = document.getElementById('turntableVinyl');
   const turntableAssembly = document.getElementById('turntableAssembly');
+  const soundStatus = document.getElementById('soundStatus');
 
   const updateAudioUI = (isPlaying: boolean) => {
     if (turntableVinyl) {
@@ -69,14 +74,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (mainPlayBtnText) {
-      mainPlayBtnText.textContent = isPlaying ? 'أوقفيها.' : 'شغّليها.';
+      mainPlayBtnText.textContent = isPlaying ? 'أوقفي اللحن.' : 'شغّلي اللحن.';
+    }
+    if (soundStatus) {
+      soundStatus.textContent = isPlaying ? 'الأسطوانة بتعزف الآن' : 'جاهز للعزف';
     }
   };
 
   audioPlayer.subscribe(updateAudioUI);
 
-  const toggleAudio = () => {
-    audioPlayer.toggle();
+  const toggleAudio = async () => {
+    try {
+      if (soundStatus) soundStatus.textContent = 'لحظة...';
+      await audioPlayer.toggle();
+    } catch (error) {
+      console.error('Audio playback failed:', error);
+      if (soundStatus) soundStatus.textContent = 'الصوت محتاج ضغطة تانية';
+    }
   };
 
   stickyAudioToggle?.addEventListener('click', toggleAudio);
@@ -94,14 +108,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnOpenManuscript = document.getElementById('btnOpenManuscript');
 
   btnOpenManuscript?.addEventListener('click', () => {
-    if (openingScreen) {
-      openingScreen.classList.add('hidden');
-      setTimeout(() => {
-        openingScreen.style.display = 'none';
-      }, 950);
-    }
     document.body.classList.add('manuscript-open');
-    celebration?.burst(25);
+
+    if (openingScreen) {
+      const left = openingScreen.querySelector('.cover-left');
+      const right = openingScreen.querySelector('.cover-right');
+      const content = openingScreen.querySelector('.opening-content');
+      const frame = openingScreen.querySelector('.opening-gold-frame');
+
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const tl = gsap.timeline({
+          onComplete: () => { openingScreen.style.display = 'none'; }
+        });
+        tl.to(content, { opacity: 0, y: -14, duration: .42, ease: 'power2.in' })
+          .to(frame, { opacity: 0, duration: .28 }, '<')
+          .to(left, { xPercent: -108, rotateY: -12, duration: 1.05, ease: 'power3.inOut' }, '-=.05')
+          .to(right, { xPercent: 108, rotateY: 12, duration: 1.05, ease: 'power3.inOut' }, '<')
+          .to(openingScreen, { opacity: 0, duration: .35 }, '-=.18');
+      } else {
+        openingScreen.style.display = 'none';
+      }
+    }
+    celebration?.burst(22);
   });
 
   // 4. Her Little World (Spatial Editorial)
@@ -287,4 +315,140 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     revealElements.forEach(el => el.classList.add('visible'));
   }
+
+  // 12. Cinematic chapter choreography
+  const initCinematicMotion = () => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const scenes = Array.from(document.querySelectorAll<HTMLElement>('.manuscript-scene[data-scene]'));
+
+    const setScene = (scene?: string) => {
+      document.body.dataset.scene = scene || 'hero';
+    };
+    setScene('hero');
+
+    scenes.forEach(section => {
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top 55%',
+        end: 'bottom 45%',
+        onEnter: () => setScene(section.dataset.scene),
+        onEnterBack: () => setScene(section.dataset.scene)
+      });
+    });
+
+    if (reduced) return;
+
+    gsap.from('.hero-composition', {
+      opacity: 0,
+      y: 42,
+      scale: .96,
+      duration: 1.35,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '#hero', start: 'top 70%' }
+    });
+
+    gsap.to('.hero-orbit', {
+      rotate: 44,
+      yPercent: 10,
+      ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.2 }
+    });
+
+    gsap.utils.toArray<HTMLElement>('.world-word-btn').forEach((word, index) => {
+      gsap.from(word, {
+        opacity: 0,
+        y: 30,
+        rotate: index % 2 ? 3 : -3,
+        duration: .8,
+        delay: index * .07,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '#little-world', start: 'top 65%' }
+      });
+    });
+
+    gsap.utils.toArray<HTMLElement>('.poetry-individual-scene').forEach(scene => {
+      const poet = scene.querySelector('.scene-poet-name');
+      const lines = scene.querySelectorAll('.verse-line');
+      const note = scene.querySelector('.scene-annotation');
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: scene,
+          start: 'top 68%',
+          end: 'center 45%',
+          scrub: .45
+        }
+      });
+      tl.fromTo(scene, { opacity: .18, scale: .955 }, { opacity: 1, scale: 1, ease: 'none' })
+        .from(poet, { opacity: 0, y: 26, letterSpacing: '.18em' }, '<')
+        .from(lines, {
+          opacity: 0,
+          y: 34,
+          clipPath: 'inset(100% 0 0 0)',
+          stagger: .13,
+          ease: 'power2.out'
+        }, '<.08')
+        .from(note, { opacity: 0, y: 18 }, '-=.15');
+    });
+
+    gsap.from('.vintage-photo-frame', {
+      opacity: 0,
+      y: 95,
+      rotate: -9,
+      scale: .82,
+      duration: 1.25,
+      ease: 'power4.out',
+      scrollTrigger: { trigger: '#memories', start: 'top 66%' }
+    });
+
+    gsap.to('.vintage-photo-frame', {
+      y: -24,
+      rotate: -1,
+      ease: 'none',
+      scrollTrigger: { trigger: '#memories', start: 'top bottom', end: 'bottom top', scrub: 1.4 }
+    });
+
+    gsap.from('.turntable-assembly', {
+      opacity: 0,
+      y: 80,
+      rotateX: 18,
+      scale: .82,
+      duration: 1.15,
+      ease: 'back.out(1.25)',
+      scrollTrigger: { trigger: '#music', start: 'top 68%' }
+    });
+
+    gsap.from('.wishes-lines li', {
+      opacity: 0,
+      x: 30,
+      stagger: .12,
+      duration: .65,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '#personal-wishes', start: 'top 62%' }
+    });
+
+    gsap.from('.birthday-name', {
+      opacity: 0,
+      scale: .55,
+      filter: 'blur(12px)',
+      duration: 1.35,
+      ease: 'power4.out',
+      scrollTrigger: { trigger: '#birthday-reveal', start: 'top 55%' }
+    });
+
+    gsap.to('.arched-window', {
+      yPercent: -8,
+      ease: 'none',
+      scrollTrigger: { trigger: 'main', start: 'top top', end: 'bottom bottom', scrub: 1.5 }
+    });
+
+    gsap.to('.dust-near', {
+      yPercent: -10,
+      xPercent: -4,
+      ease: 'none',
+      scrollTrigger: { trigger: 'main', start: 'top top', end: 'bottom bottom', scrub: 2 }
+    });
+  };
+
+  requestAnimationFrame(initCinematicMotion);
 });

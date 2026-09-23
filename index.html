@@ -34,8 +34,32 @@
   <!-- Particle Celebration Canvas -->
   <canvas id="celebrationCanvas" aria-hidden="true"></canvas>
 
+  <!-- CINEMATIC OLD-WORLD BACKDROP -->
+  <div class="cinematic-backdrop" id="cinematicBackdrop" aria-hidden="true">
+    <div class="backdrop-ink"></div>
+    <div class="arched-window">
+      <div class="moon-halo"></div>
+      <div class="moon-disc"></div>
+      <i class="star star-1"></i><i class="star star-2"></i><i class="star star-3"></i>
+      <i class="star star-4"></i><i class="star star-5"></i><i class="star star-6"></i>
+      <div class="window-cross window-cross-v"></div>
+      <div class="window-cross window-cross-h"></div>
+    </div>
+    <div class="candle candle-left"><i class="flame"></i><i class="wick"></i><i class="wax-drip"></i></div>
+    <div class="candle candle-right"><i class="flame"></i><i class="wick"></i><i class="wax-drip"></i></div>
+    <div class="dust-layer dust-near"></div>
+    <div class="dust-layer dust-far"></div>
+    <div class="floating-page page-one"></div>
+    <div class="floating-page page-two"></div>
+    <div class="ink-ribbon ribbon-one"></div>
+    <div class="ink-ribbon ribbon-two"></div>
+  </div>
+
   <!-- 01 — OPENING SCENE -->
   <div id="openingScreen" class="opening-screen" role="dialog" aria-modal="true" aria-label="افتتاح المخطوطة">
+    <div class="opening-cover-panel cover-left" aria-hidden="true"></div>
+    <div class="opening-cover-panel cover-right" aria-hidden="true"></div>
+    <div class="opening-gold-frame" aria-hidden="true"></div>
     <div class="opening-content">
       <span class="opening-for-label">For Loji</span>
       <h1 class="opening-greeting">إلى لُجين</h1>
@@ -64,7 +88,8 @@
   <main class="site-wrapper">
 
     <!-- 02 — HERO SCENE -->
-    <header class="manuscript-scene hero-scene" id="hero">
+    <header class="manuscript-scene hero-scene scene-parchment" data-scene="hero" id="hero">
+      <div class="hero-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
       <div class="hero-composition reveal-ink">
         <h1 class="display-hero">لُـجَـيْـن</h1>
         <p class="hero-subtitle">«بعض الأسماء تُقال، وبعضها يُروى.»</p>
@@ -73,7 +98,8 @@
     </header>
 
     <!-- 03 — HER LITTLE WORLD -->
-    <section class="manuscript-scene world-scene" id="little-world" aria-label="عوالمها">
+    <section class="manuscript-scene world-scene scene-study" data-scene="world" id="little-world" aria-label="عوالمها">
+      <div class="astrolabe-mark" aria-hidden="true"><i></i><i></i><i></i></div>
       <h2 class="editorial-heading reveal-fade">عوالمُها</h2>
       
       <div class="world-editorial-composition reveal-fade">
@@ -88,17 +114,20 @@
     </section>
 
     <!-- 04 — POETRY SIGNATURE MOMENT -->
-    <section class="manuscript-scene poetry-sequence-scene" id="poetry" aria-label="في حضرة الشعراء">
+    <section class="manuscript-scene poetry-sequence-scene scene-night" data-scene="poetry" id="poetry" aria-label="في حضرة الشعراء">
+      <div class="poetry-horizon" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="poetry-flow" id="poetryFlow">
         <!-- Populated dynamically via site.ts -->
       </div>
     </section>
 
     <!-- 05 — MEMORY VIGNETTE -->
-    <section class="manuscript-scene memory-scene" id="memories" aria-label="صورة واحدة تكفي">
+    <section class="manuscript-scene memory-scene scene-photo" data-scene="memory" id="memories" aria-label="صورة واحدة تكفي">
       <p class="manuscript-marginalia reveal-fade">صورة واحدة تكفي</p>
       <div class="memory-vignette-wrapper reveal-ink">
         <div class="vignette-frame vintage-photo-frame">
+          <span class="photo-corner corner-a"></span><span class="photo-corner corner-b"></span>
+          <span class="film-burn" aria-hidden="true"></span>
           <img src="" id="memoryVignetteImg" alt="لُجين" loading="lazy" decoding="async" />
         </div>
         <p class="vignette-caption" id="memoryVignetteCaption">وبعض الصور لا تحتاج شرحًا.</p>
@@ -106,8 +135,8 @@
     </section>
 
     <!-- 06 — OLD MUSIC SECTION (Turntable) -->
-    <section class="manuscript-scene music-scene" id="music" aria-label="فيروز والكلاسيكيات">
-      <p class="music-marginalia reveal-fade">فيروز • كلاسيكيات • ليل هادئ</p>
+    <section class="manuscript-scene music-scene scene-gramophone" data-scene="music" id="music" aria-label="فيروز والكلاسيكيات">
+      <p class="music-marginalia reveal-fade">عود • أسطوانة • ليل قديم</p>
       <div class="music-composition reveal-fade">
         <div class="turntable-assembly" id="turntableAssembly">
           <!-- Tonearm needle -->
@@ -120,7 +149,7 @@
           <!-- Rotating Vinyl Disc -->
           <div class="turntable-vinyl" id="turntableVinyl" role="button" tabindex="0" aria-label="شغليها أو أوقفيها">
             <div class="vinyl-label-art">
-              <span class="vinyl-label-title">فيروزيات</span>
+              <span class="vinyl-label-title">لحنٌ قديم</span>
               <span class="vinyl-label-sub">٣٣ دورة</span>
             </div>
           </div>
@@ -128,15 +157,16 @@
 
         <div class="music-prompt-wrapper">
           <button id="btnMainPlayToggle" class="btn-play-prompt" type="button" aria-label="تشغيل الجو الموسيقي">
-            <span id="mainPlayBtnText">شغّلي الجو.</span>
+            <span id="mainPlayBtnText">شغّلي اللحن.</span>
           </button>
         </div>
-        <ul id="musicPlaylist" class="music-playlist" aria-label="اختيارات كلاسيكية"></ul>
+        <div class="sound-status" id="soundStatus" aria-live="polite">جاهز للعزف</div>
+        <ul id="musicPlaylist" class="music-playlist" aria-label="مزاج موسيقي كلاسيكي"></ul>
       </div>
     </section>
 
     <!-- 07 — PERSONAL WISHES (POETIC FRAGMENTS) -->
-    <section class="manuscript-scene wishes-scene" id="personal-wishes" aria-label="أمنيات">
+    <section class="manuscript-scene wishes-scene scene-scroll" data-scene="wishes" id="personal-wishes" aria-label="أمنيات">
       <div class="wishes-composition reveal-fade">
         <h2 class="wishes-leadin">أتمنى ما تفقديش...</h2>
         <ul class="wishes-lines" id="wishesLines">
@@ -146,7 +176,7 @@
     </section>
 
     <!-- 08 — BIRTHDAY REVEAL -->
-    <section class="manuscript-scene birthday-scene" id="birthday-reveal" aria-label="يوم ميلادك">
+    <section class="manuscript-scene birthday-scene scene-birthday-night" data-scene="birthday" id="birthday-reveal" aria-label="يوم ميلادك">
       <div class="birthday-composition reveal-fade">
         <span class="birthday-moment-lead">واليوم...</span>
         <p class="birthday-moment-sub">صفحة جديدة... والباقي لسه بيتكتب.</p>
@@ -164,7 +194,7 @@
     </section>
 
     <!-- 09 — FINAL SEALED LETTER -->
-    <section class="manuscript-scene letter-scene" id="final-letter" aria-label="رسالة مختومة">
+    <section class="manuscript-scene letter-scene scene-letter" data-scene="letter" id="final-letter" aria-label="رسالة مختومة">
       <div class="letter-interaction-wrapper reveal-fade">
         <!-- Sealed State -->
         <div class="wax-envelope-card" id="waxEnvelope" role="button" tabindex="0" aria-label="انقري لكسر الختم وقراءة الرسالة">
@@ -194,6 +224,7 @@
     <!-- FOOTER -->
     <footer class="manuscript-colophon">
       <p>لُجين • ٢٠٢٦</p>
+      <span class="music-credit-note">اللحن المشغّل أصلي للموقع • وفيروز في المزاج، لا في الملف</span>
     </footer>
 
   </main>

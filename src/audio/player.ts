@@ -1,74 +1,56 @@
 /**
- * Audio Engine for Loji's Vintage Gramophone Experience.
- * Provides dual capabilities:
- * 1. Native HTML5 Audio playback for custom MP3 files.
- * 2. Procedural Web Audio vintage music-box / acoustic tone synthesizer with
- *    subtle vinyl crackle and nostalgic chord harmonies when no external file is loaded.
- * Strict compliance with iOS Safari user-gesture policies and no-autoplay rules.
+ * Loji Old-World Audio Engine
+ * Plays either a user-supplied audio file or a browser-generated original
+ * Arabic-classic instrumental using Hijaz-inspired melody, oud-like plucks,
+ * ney-like lead and soft vinyl texture. No autoplay.
  */
 
 type PlayStateListener = (isPlaying: boolean) => void;
 
 export class VintageAudioPlayer {
   private audioCtx: AudioContext | null = null;
-  private isSynthesizing = false;
   private isPlaying = false;
   private externalAudio: HTMLAudioElement | null = null;
   private listeners: PlayStateListener[] = [];
-  private sequenceTimer: number | null = null;
-  private masterGain: GainNode | null = null;
-  private vinylGain: GainNode | null = null;
+  private timer: number | null = null;
+  private master: GainNode | null = null;
+  private vinyl: GainNode | null = null;
+  private step = 0;
 
-  // Nostalgic classical pentatonic / poetic frequencies in Hz (A4 = 440)
-  // Gentle melancholic vintage chords: Dm7 -> G7 -> Cmaj7 -> Am
-  private chordProgression: number[][] = [
-    [146.83, 220.00, 261.63, 349.23, 440.00], // D3, A3, C4, F4, A4
-    [196.00, 246.94, 293.66, 392.00, 493.88], // G3, B3, D4, G4, B4
-    [130.81, 196.00, 261.63, 329.63, 392.00], // C3, G3, C4, E4, G4
-    [110.00, 164.81, 220.00, 261.63, 329.63]  // A2, E3, A3, C4, E4
-  ];
-  private currentChordIndex = 0;
+  private readonly hijaz = [293.66, 311.13, 369.99, 392.0, 440.0, 466.16, 523.25, 587.33];
+  private readonly melody = [0,1,2,3,2,1,0,4,3,2,1,0,6,5,4,3,2,3,4,5,4,3,2,1];
 
   constructor(externalSrc?: string) {
     if (externalSrc) {
       this.externalAudio = new Audio(externalSrc);
       this.externalAudio.loop = true;
-      this.externalAudio.addEventListener('ended', () => {
-        this.setPlaying(false);
-      });
-      this.externalAudio.addEventListener('pause', () => {
-        this.setPlaying(false);
-      });
+      this.externalAudio.preload = 'auto';
+      this.externalAudio.volume = 0.78;
+      this.externalAudio.addEventListener('pause', () => this.setPlaying(false));
+      this.externalAudio.addEventListener('ended', () => this.setPlaying(false));
     }
   }
 
   public subscribe(listener: PlayStateListener): () => void {
     this.listeners.push(listener);
     listener(this.isPlaying);
-    return () => {
-      this.listeners = this.listeners.filter(l => l !== listener);
-    };
+    return () => { this.listeners = this.listeners.filter(l => l !== listener); };
   }
+
+  public getIsPlaying(): boolean { return this.isPlaying; }
 
   private setPlaying(state: boolean): void {
-    if (this.isPlaying !== state) {
-      this.isPlaying = state;
-      this.listeners.forEach(fn => fn(state));
-    }
-  }
-
-  public getIsPlaying(): boolean {
-    return this.isPlaying;
+    this.isPlaying = state;
+    this.listeners.forEach(fn => fn(state));
   }
 
   public async toggle(): Promise<boolean> {
     if (this.isPlaying) {
       this.pause();
       return false;
-    } else {
-      await this.play();
-      return true;
     }
+    await this.play();
+    return true;
   }
 
   public async play(): Promise<void> {
@@ -77,190 +59,216 @@ export class VintageAudioPlayer {
         await this.externalAudio.play();
         this.setPlaying(true);
         return;
-      } catch (err) {
-        console.warn('External audio playback blocked, falling back to Web Audio:', err);
+      } catch (error) {
+        console.warn('Audio file unavailable; using built-in old-world instrumental.', error);
       }
     }
 
-    await this.startProceduralAudio();
+    await this.startInstrumental();
     this.setPlaying(true);
   }
 
   public pause(): void {
-    if (this.externalAudio) {
-      this.externalAudio.pause();
-    }
-    this.stopProceduralAudio();
+    this.externalAudio?.pause();
+    this.stopInstrumental();
     this.setPlaying(false);
   }
 
-  private initAudioContext(): void {
+  private async ensureContext(): Promise<AudioContext> {
     if (!this.audioCtx) {
-      const AudioCtxClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      this.audioCtx = new AudioCtxClass();
+      const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      this.audioCtx = new Ctx();
 
-      // Master output with subtle vintage warmth
-      this.masterGain = this.audioCtx.createGain();
-      this.masterGain.gain.setValueAtTime(0.0001, this.audioCtx.currentTime);
+      const master = this.audioCtx.createGain();
+      master.gain.value = 0.0001;
 
-      // Lowpass filter to simulate 78 RPM / 33 RPM vintage vinyl warmth (cuts harsh digital highs)
-      const lowpass = this.audioCtx.createBiquadFilter();
-      lowpass.type = 'lowpass';
-      lowpass.frequency.setValueAtTime(1400, this.audioCtx.currentTime);
-      lowpass.Q.setValueAtTime(1.2, this.audioCtx.currentTime);
+      const warmth = this.audioCtx.createBiquadFilter();
+      warmth.type = 'lowpass';
+      warmth.frequency.value = 3200;
+      warmth.Q.value = 0.5;
 
-      this.masterGain.connect(lowpass);
-      lowpass.connect(this.audioCtx.destination);
+      const compressor = this.audioCtx.createDynamicsCompressor();
+      compressor.threshold.value = -20;
+      compressor.knee.value = 18;
+      compressor.ratio.value = 3;
+      compressor.attack.value = 0.012;
+      compressor.release.value = 0.3;
 
-      // Setup subtle vinyl noise / crackle loop
-      this.setupVinylNoise();
+      master.connect(warmth);
+      warmth.connect(compressor);
+      compressor.connect(this.audioCtx.destination);
+      this.master = master;
+
+      this.createVinylBed();
     }
 
-    if (this.audioCtx.state === 'suspended') {
-      this.audioCtx.resume();
-    }
-  }
-
-  private setupVinylNoise(): void {
-    if (!this.audioCtx) return;
-    try {
-      const bufferSize = this.audioCtx.sampleRate * 2;
-      const noiseBuffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
-      const output = noiseBuffer.getChannelData(0);
-
-      let b0 = 0, b1 = 0, b2 = 0;
-      for (let i = 0; i < bufferSize; i++) {
-        // Pink noise approximation for warm vintage surface sound
-        const white = Math.random() * 2 - 1;
-        b0 = 0.99765 * b0 + white * 0.05;
-        b1 = 0.96300 * b1 + white * 0.05;
-        b2 = 0.57000 * b2 + white * 0.15;
-        let sample = (b0 + b1 + b2) * 0.02;
-
-        // Occasional dust click / pop
-        if (Math.random() < 0.0008) {
-          sample += (Math.random() - 0.5) * 0.18;
-        }
-        output[i] = sample;
-      }
-
-      const noiseSource = this.audioCtx.createBufferSource();
-      noiseSource.buffer = noiseBuffer;
-      noiseSource.loop = true;
-
-      const noiseFilter = this.audioCtx.createBiquadFilter();
-      noiseFilter.type = 'bandpass';
-      noiseFilter.frequency.setValueAtTime(1200, this.audioCtx.currentTime);
-      noiseFilter.Q.setValueAtTime(0.8, this.audioCtx.currentTime);
-
-      this.vinylGain = this.audioCtx.createGain();
-      this.vinylGain.gain.setValueAtTime(0.0001, this.audioCtx.currentTime);
-
-      noiseSource.connect(noiseFilter);
-      noiseFilter.connect(this.vinylGain);
-      if (this.masterGain) {
-        this.vinylGain.connect(this.masterGain);
-      }
-      noiseSource.start(0);
-    } catch (e) {
-      // Audio buffer generation failed gracefully
-    }
-  }
-
-  private async startProceduralAudio(): Promise<void> {
-    this.initAudioContext();
-    if (!this.audioCtx || !this.masterGain) return;
-
-    if (this.audioCtx.state === 'suspended') {
+    if (this.audioCtx.state !== 'running') {
       await this.audioCtx.resume();
     }
-
-    this.isSynthesizing = true;
-    const now = this.audioCtx.currentTime;
-
-    // Fade in master smoothly to prevent clicks
-    this.masterGain.gain.cancelScheduledValues(now);
-    this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
-    this.masterGain.gain.linearRampToValueAtTime(0.35, now + 1.2);
-
-    if (this.vinylGain) {
-      this.vinylGain.gain.cancelScheduledValues(now);
-      this.vinylGain.gain.setValueAtTime(this.vinylGain.gain.value, now);
-      this.vinylGain.gain.linearRampToValueAtTime(0.08, now + 1.5);
-    }
-
-    this.playNextArpeggioStep();
+    return this.audioCtx;
   }
 
-  private playNextArpeggioStep(): void {
-    if (!this.isSynthesizing || !this.audioCtx || !this.masterGain) return;
+  private createVinylBed(): void {
+    if (!this.audioCtx || !this.master) return;
+    const length = this.audioCtx.sampleRate * 2;
+    const buffer = this.audioCtx.createBuffer(1, length, this.audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    let b = 0;
 
-    const chord = this.chordProgression[this.currentChordIndex];
-    this.currentChordIndex = (this.currentChordIndex + 1) % this.chordProgression.length;
-
-    // Play an arpeggiated vintage music-box tone for the chord notes
-    chord.forEach((freq, idx) => {
-      const delay = idx * 0.45;
-      const noteTime = this.audioCtx!.currentTime + delay;
-      this.playPluckNote(freq, noteTime, 2.2);
-    });
-
-    // Schedule next chord after 3.2 seconds
-    this.sequenceTimer = window.setTimeout(() => {
-      this.playNextArpeggioStep();
-    }, 3200);
-  }
-
-  private playPluckNote(freq: number, startTime: number, duration: number): void {
-    if (!this.audioCtx || !this.masterGain) return;
-
-    try {
-      const osc = this.audioCtx.createOscillator();
-      const oscGain = this.audioCtx.createGain();
-
-      // Triangle + gentle sine blend for soft vintage music box warmth
-      osc.type = 'triangle';
-      // Subtle vintage detune
-      const detuneCents = (Math.random() - 0.5) * 8;
-      osc.detune.setValueAtTime(detuneCents, startTime);
-      osc.frequency.setValueAtTime(freq, startTime);
-
-      // Acoustic envelope: quick gentle attack, mellow exponential decay
-      oscGain.gain.setValueAtTime(0.0001, startTime);
-      oscGain.gain.exponentialRampToValueAtTime(0.18, startTime + 0.05);
-      oscGain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
-
-      osc.connect(oscGain);
-      oscGain.connect(this.masterGain);
-
-      osc.start(startTime);
-      osc.stop(startTime + duration + 0.1);
-    } catch {
-      // Graceful error ignore on disposed node
-    }
-  }
-
-  private stopProceduralAudio(): void {
-    this.isSynthesizing = false;
-    if (this.sequenceTimer) {
-      clearTimeout(this.sequenceTimer);
-      this.sequenceTimer = null;
+    for (let i = 0; i < length; i++) {
+      const white = Math.random() * 2 - 1;
+      b = b * 0.965 + white * 0.035;
+      let sample = b * 0.16;
+      if (Math.random() < 0.0009) sample += (Math.random() - 0.5) * 0.55;
+      data[i] = sample;
     }
 
-    if (this.audioCtx && this.masterGain) {
+    const source = this.audioCtx.createBufferSource();
+    source.buffer = buffer;
+    source.loop = true;
+
+    const filter = this.audioCtx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 1450;
+    filter.Q.value = 0.55;
+
+    const gain = this.audioCtx.createGain();
+    gain.gain.value = 0.0001;
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.master);
+    source.start();
+
+    this.vinyl = gain;
+  }
+
+  private async startInstrumental(): Promise<void> {
+    const ctx = await this.ensureContext();
+    if (!this.master) return;
+
+    const now = ctx.currentTime;
+    this.master.gain.cancelScheduledValues(now);
+    this.master.gain.setValueAtTime(Math.max(this.master.gain.value, 0.0001), now);
+    this.master.gain.exponentialRampToValueAtTime(0.62, now + 0.28);
+
+    if (this.vinyl) {
+      this.vinyl.gain.cancelScheduledValues(now);
+      this.vinyl.gain.setValueAtTime(Math.max(this.vinyl.gain.value, 0.0001), now);
+      this.vinyl.gain.linearRampToValueAtTime(0.055, now + 0.5);
+    }
+
+    this.step = 0;
+    this.schedulePhrase();
+  }
+
+  private schedulePhrase(): void {
+    if (!this.audioCtx || !this.master || !this.isPlaying && this.step > 0) return;
+
+    const ctx = this.audioCtx;
+    const base = ctx.currentTime + 0.04;
+
+    for (let i = 0; i < 8; i++) {
+      const noteIndex = this.melody[(this.step + i) % this.melody.length];
+      this.playOud(this.hijaz[noteIndex], base + i * 0.46, i % 4 === 0 ? 0.17 : 0.125);
+      if (i === 0 || i === 4) this.playFrameDrum(base + i * 0.46, i === 0 ? 0.10 : 0.075);
+    }
+
+    const lead = this.hijaz[this.melody[(this.step + 5) % this.melody.length]];
+    this.playNey(lead, base + 1.35, 1.6, 0.055);
+
+    this.step = (this.step + 8) % this.melody.length;
+    this.timer = window.setTimeout(() => this.schedulePhrase(), 3500);
+  }
+
+  private playOud(freq: number, when: number, amp: number): void {
+    if (!this.audioCtx || !this.master) return;
+    const ctx = this.audioCtx;
+    const gain = ctx.createGain();
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+
+    osc1.type = 'triangle';
+    osc2.type = 'sine';
+    osc1.frequency.setValueAtTime(freq, when);
+    osc2.frequency.setValueAtTime(freq * 2.01, when);
+
+    gain.gain.setValueAtTime(0.0001, when);
+    gain.gain.exponentialRampToValueAtTime(amp, when + 0.018);
+    gain.gain.exponentialRampToValueAtTime(0.0001, when + 0.78);
+
+    osc1.connect(gain);
+    osc2.connect(gain);
+    gain.connect(this.master);
+
+    osc1.start(when); osc2.start(when);
+    osc1.stop(when + 0.82); osc2.stop(when + 0.82);
+  }
+
+  private playNey(freq: number, when: number, duration: number, amp: number): void {
+    if (!this.audioCtx || !this.master) return;
+    const ctx = this.audioCtx;
+    const osc = ctx.createOscillator();
+    const vibrato = ctx.createOscillator();
+    const vibratoGain = ctx.createGain();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, when);
+    vibrato.frequency.value = 5.2;
+    vibratoGain.gain.value = 3.2;
+    vibrato.connect(vibratoGain);
+    vibratoGain.connect(osc.frequency);
+
+    gain.gain.setValueAtTime(0.0001, when);
+    gain.gain.linearRampToValueAtTime(amp, when + 0.18);
+    gain.gain.setValueAtTime(amp, when + Math.max(0.2, duration - 0.28));
+    gain.gain.exponentialRampToValueAtTime(0.0001, when + duration);
+
+    osc.connect(gain);
+    gain.connect(this.master);
+    vibrato.start(when); osc.start(when);
+    vibrato.stop(when + duration + 0.05); osc.stop(when + duration + 0.05);
+  }
+
+  private playFrameDrum(when: number, amp: number): void {
+    if (!this.audioCtx || !this.master) return;
+    const ctx = this.audioCtx;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(95, when);
+    osc.frequency.exponentialRampToValueAtTime(52, when + 0.16);
+    gain.gain.setValueAtTime(amp, when);
+    gain.gain.exponentialRampToValueAtTime(0.0001, when + 0.20);
+    osc.connect(gain); gain.connect(this.master);
+    osc.start(when); osc.stop(when + 0.22);
+  }
+
+  private stopInstrumental(): void {
+    if (this.timer !== null) {
+      window.clearTimeout(this.timer);
+      this.timer = null;
+    }
+    if (this.audioCtx && this.master) {
       const now = this.audioCtx.currentTime;
-      this.masterGain.gain.cancelScheduledValues(now);
-      this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
-      this.masterGain.gain.linearRampToValueAtTime(0.0001, now + 0.6);
+      this.master.gain.cancelScheduledValues(now);
+      this.master.gain.setValueAtTime(Math.max(this.master.gain.value, 0.0001), now);
+      this.master.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+    }
+    if (this.audioCtx && this.vinyl) {
+      const now = this.audioCtx.currentTime;
+      this.vinyl.gain.cancelScheduledValues(now);
+      this.vinyl.gain.setValueAtTime(Math.max(this.vinyl.gain.value, 0.0001), now);
+      this.vinyl.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
     }
   }
 
   public dispose(): void {
     this.pause();
     if (this.audioCtx && this.audioCtx.state !== 'closed') {
-      this.audioCtx.close();
-      this.audioCtx = null;
+      void this.audioCtx.close();
     }
+    this.audioCtx = null;
     this.listeners = [];
   }
 }
