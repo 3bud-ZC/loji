@@ -4,231 +4,161 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>إلى لُجين — مخطوطة شعرية</title>
-  <meta name="description" content="مخطوطة شعرية كلاسيكية وتجربة رقمية كُتبت خصيصاً لـ لُجين." />
-  <meta name="theme-color" content="#250B10" />
-  
-  <!-- Favicon -->
+  <meta name="description" content="مخطوطة شعرية وتجربة كلاسيكية كُتبت خصيصاً لـ لُجين." />
+  <meta name="theme-color" content="#11090c" />
   <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
   <link rel="apple-touch-icon" href="./favicon.svg" />
-
-  <!-- Open Graph / Social Media -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://3bud-zc.github.io/loji/" />
   <meta property="og:title" content="إلى لُجين — مخطوطة شعرية" />
   <meta property="og:description" content="مخطوطة شعرية كلاسيكية كُتبت خصيصاً لـ لُجين." />
-  <meta property="og:image" content="https://3bud-zc.github.io/loji/favicon.svg" />
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="إلى لُجين — مخطوطة شعرية" />
-  <meta name="twitter:description" content="مخطوطة شعرية كلاسيكية كُتبت خصيصاً لـ لُجين." />
-
-  <!-- Google Fonts Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-
-  <!-- Stylesheet -->
   <link rel="stylesheet" href="/src/styles/main.css" />
 </head>
-<body>
-
-  <!-- Particle Celebration Canvas -->
+<body data-scene="hero">
   <canvas id="celebrationCanvas" aria-hidden="true"></canvas>
 
-  <!-- CINEMATIC OLD-WORLD BACKDROP -->
-  <div class="cinematic-backdrop" id="cinematicBackdrop" aria-hidden="true">
-    <div class="backdrop-ink"></div>
-    <div class="arched-window">
-      <div class="moon-halo"></div>
-      <div class="moon-disc"></div>
-      <i class="star star-1"></i><i class="star star-2"></i><i class="star star-3"></i>
-      <i class="star star-4"></i><i class="star star-5"></i><i class="star star-6"></i>
-      <div class="window-cross window-cross-v"></div>
-      <div class="window-cross window-cross-h"></div>
+  <div class="ambient-stage" aria-hidden="true">
+    <div class="ambient-vignette"></div>
+    <div class="moon-window">
+      <div class="moon"></div>
+      <div class="window-bar bar-v"></div>
+      <div class="window-bar bar-h"></div>
     </div>
-    <div class="candle candle-left"><i class="flame"></i><i class="wick"></i><i class="wax-drip"></i></div>
-    <div class="candle candle-right"><i class="flame"></i><i class="wick"></i><i class="wax-drip"></i></div>
-    <div class="dust-layer dust-near"></div>
-    <div class="dust-layer dust-far"></div>
-    <div class="floating-page page-one"></div>
-    <div class="floating-page page-two"></div>
-    <div class="ink-ribbon ribbon-one"></div>
-    <div class="ink-ribbon ribbon-two"></div>
+    <div class="candle-glow glow-left"></div>
+    <div class="candle-glow glow-right"></div>
+    <div class="dust dust-a"></div>
+    <div class="dust dust-b"></div>
   </div>
 
-  <!-- 01 — OPENING SCENE -->
-  <div id="openingScreen" class="opening-screen" role="dialog" aria-modal="true" aria-label="افتتاح المخطوطة">
-    <div class="opening-cover-panel cover-left" aria-hidden="true"></div>
-    <div class="opening-cover-panel cover-right" aria-hidden="true"></div>
-    <div class="opening-gold-frame" aria-hidden="true"></div>
-    <div class="opening-content">
-      <span class="opening-for-label">For Loji</span>
-      <h1 class="opening-greeting">إلى لُجين</h1>
-      <p class="opening-poetic-line">التي كان من سوء حظ الشعراء أنها جاءت بعدهم.</p>
-      
-      <button id="btnOpenManuscript" class="opening-seal-prompt" type="button" aria-label="افتحي المخطوطة">
-        <span class="opening-seal-icon" aria-hidden="true">لُ</span>
-        <span class="opening-seal-label">افتحي المخطوطة</span>
+  <div id="intro" class="intro" role="dialog" aria-modal="true" aria-label="افتتاح المخطوطة">
+    <div class="intro-table" aria-hidden="true"></div>
+    <div class="book-shell">
+      <button id="openExperience" class="book-cover" type="button" aria-label="افتحي المخطوطة">
+        <span class="book-frame"></span>
+        <span class="book-label font-english">For Loji</span>
+        <strong class="book-title">إلى لُجين</strong>
+        <span class="book-line">التي كان من سوء حظ الشعراء أنها جاءت بعدهم.</span>
+        <span class="wax-mark" aria-hidden="true">لُ</span>
+        <span class="open-label">افتحي المخطوطة</span>
       </button>
+      <div class="book-pages" aria-hidden="true"></div>
     </div>
   </div>
 
-  <!-- FLOATING AUDIO CONTROLLER (Minimalist) -->
-  <div id="stickyAudioBar" class="sticky-audio-bar" role="region" aria-label="مشغل الموسيقى">
-    <button id="stickyAudioToggle" class="audio-btn-icon" type="button" aria-label="تشغيل أو إيقاف الموسيقى">
-      <span id="stickyAudioIcon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
-          <polygon points="6 3 20 12 6 21 6 3"></polygon>
-        </svg>
-      </span>
-    </button>
-    <span class="audio-bar-text" id="stickyAudioText">مزاج قديم</span>
-  </div>
+  <button id="audioDock" class="audio-dock" type="button" aria-label="تشغيل أو إيقاف الموسيقى">
+    <span id="audioDockIcon" class="audio-dock-icon">▶</span>
+    <span id="audioDockLabel" class="audio-dock-label">اللحن</span>
+  </button>
 
-  <!-- MAIN MANUSCRIPT CONTAINER -->
-  <main class="site-wrapper">
-
-    <!-- 02 — HERO SCENE -->
-    <header class="manuscript-scene hero-scene scene-parchment" data-scene="hero" id="hero">
-      <div class="hero-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
-      <div class="hero-composition reveal-ink">
-        <h1 class="display-hero">لُـجَـيْـن</h1>
-        <p class="hero-subtitle">«بعض الأسماء تُقال، وبعضها يُروى.»</p>
-        <span class="hero-annotation">إلى لُجين • ٢٠٢٦</span>
-      </div>
-    </header>
-
-    <!-- 03 — HER LITTLE WORLD -->
-    <section class="manuscript-scene world-scene scene-study" data-scene="world" id="little-world" aria-label="عوالمها">
-      <div class="astrolabe-mark" aria-hidden="true"><i></i><i></i><i></i></div>
-      <h2 class="editorial-heading reveal-fade">عوالمُها</h2>
-      
-      <div class="world-editorial-composition reveal-fade">
-        <div class="world-words-row" id="worldWordsRow" role="tablist">
-          <!-- Populated dynamically via site.ts -->
-        </div>
-
-        <div class="world-reflection-display" id="worldReflectionDisplay" role="tabpanel" aria-live="polite">
-          <p class="reflection-text" id="reflectionText">الكلام لما الكلام العادي ما يكفيش.</p>
-        </div>
+  <main id="story" class="story">
+    <section class="chapter chapter-hero" data-scene="hero" id="hero">
+      <div class="chapter-inner hero-inner">
+        <span class="eyebrow">مخطوطة صغيرة</span>
+        <h1 class="hero-name">لُـجَـيْـن</h1>
+        <p class="hero-line">بعض الأسماء تُقال، وبعضها يُروى.</p>
+        <span class="hero-note">٢٠٢٦ • إلى لُجين</span>
       </div>
     </section>
 
-    <!-- 04 — POETRY SIGNATURE MOMENT -->
-    <section class="manuscript-scene poetry-sequence-scene scene-night" data-scene="poetry" id="poetry" aria-label="في حضرة الشعراء">
-      <div class="poetry-horizon" aria-hidden="true"><i></i><i></i><i></i></div>
-      <div class="poetry-flow" id="poetryFlow">
-        <!-- Populated dynamically via site.ts -->
+    <section class="chapter chapter-world" data-scene="world" id="world">
+      <div class="chapter-inner world-inner">
+        <span class="section-kicker">تفاصيل أعرفها عنها</span>
+        <h2 class="section-title">عوالمها</h2>
+        <div id="worldWords" class="world-words" role="tablist"></div>
+        <p id="worldReflection" class="world-reflection" aria-live="polite"></p>
       </div>
     </section>
 
-    <!-- 05 — MEMORY VIGNETTE -->
-    <section class="manuscript-scene memory-scene scene-photo" data-scene="memory" id="memories" aria-label="صورة واحدة تكفي">
-      <p class="manuscript-marginalia reveal-fade">صورة واحدة تكفي</p>
-      <div class="memory-vignette-wrapper reveal-ink">
-        <div class="vignette-frame vintage-photo-frame">
-          <span class="photo-corner corner-a"></span><span class="photo-corner corner-b"></span>
-          <span class="film-burn" aria-hidden="true"></span>
-          <img src="" id="memoryVignetteImg" alt="لُجين" loading="lazy" decoding="async" />
-        </div>
-        <p class="vignette-caption" id="memoryVignetteCaption">وبعض الصور لا تحتاج شرحًا.</p>
+    <section class="chapter chapter-poetry" data-scene="poetry" id="poetry">
+      <div class="chapter-inner poetry-inner">
+        <span class="section-kicker">ثلاثة أصوات</span>
+        <h2 class="section-title">لو مرّ الشعراء من هنا</h2>
+        <div id="poetryStack" class="poetry-stack"></div>
       </div>
     </section>
 
-    <!-- 06 — OLD MUSIC SECTION (Turntable) -->
-    <section class="manuscript-scene music-scene scene-gramophone" data-scene="music" id="music" aria-label="فيروز والكلاسيكيات">
-      <p class="music-marginalia reveal-fade">عود • أسطوانة • ليل قديم</p>
-      <div class="music-composition reveal-fade">
-        <div class="turntable-assembly" id="turntableAssembly">
-          <!-- Tonearm needle -->
-          <div class="tonearm" id="tonearm" aria-hidden="true">
-            <div class="tonearm-base"></div>
-            <div class="tonearm-rod"></div>
-            <div class="tonearm-head"></div>
+    <section class="chapter chapter-photo" data-scene="photo" id="photo">
+      <div class="chapter-inner photo-inner">
+        <span class="section-kicker">ذكرى واحدة</span>
+        <figure class="keepsake">
+          <div class="keepsake-tape tape-one"></div>
+          <div class="keepsake-tape tape-two"></div>
+          <img id="lojiPhoto" src="" alt="لُجين" loading="lazy" decoding="async" />
+          <figcaption id="photoCaption">وبعض الصور لا تحتاج شرحًا.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="chapter chapter-music" data-scene="music" id="music">
+      <div class="chapter-inner music-inner">
+        <span class="section-kicker">ليل قديم</span>
+        <h2 class="section-title">اللحن اللي يكمّل الجو</h2>
+        <div id="recordPlayer" class="record-player" role="button" tabindex="0" aria-label="تشغيل أو إيقاف اللحن">
+          <div class="record">
+            <div class="record-grooves"></div>
+            <div class="record-label">لُجين</div>
           </div>
-
-          <!-- Rotating Vinyl Disc -->
-          <div class="turntable-vinyl" id="turntableVinyl" role="button" tabindex="0" aria-label="شغليها أو أوقفيها">
-            <div class="vinyl-label-art">
-              <span class="vinyl-label-title">لحنٌ قديم</span>
-              <span class="vinyl-label-sub">٣٣ دورة</span>
-            </div>
+          <div class="needle">
+            <i class="needle-pivot"></i>
+            <i class="needle-arm"></i>
+            <i class="needle-head"></i>
           </div>
         </div>
+        <button id="musicToggle" class="text-action" type="button">شغّلي اللحن</button>
+        <p id="musicStatus" class="music-status">عود وناي ودف خفيف</p>
+        <p id="musicInspiration" class="music-inspiration"></p>
+      </div>
+    </section>
 
-        <div class="music-prompt-wrapper">
-          <button id="btnMainPlayToggle" class="btn-play-prompt" type="button" aria-label="تشغيل الجو الموسيقي">
-            <span id="mainPlayBtnText">شغّلي اللحن.</span>
-          </button>
+    <section class="chapter chapter-wishes" data-scene="wishes" id="wishes">
+      <div class="chapter-inner wishes-inner">
+        <div class="paper-note">
+          <span class="paper-pin"></span>
+          <h2 class="wishes-title">أتمنى ما تفقديش...</h2>
+          <ul id="wishesList" class="wishes-list"></ul>
         </div>
-        <div class="sound-status" id="soundStatus" aria-live="polite">جاهز للعزف</div>
-        <ul id="musicPlaylist" class="music-playlist" aria-label="مزاج موسيقي كلاسيكي"></ul>
       </div>
     </section>
 
-    <!-- 07 — PERSONAL WISHES (POETIC FRAGMENTS) -->
-    <section class="manuscript-scene wishes-scene scene-scroll" data-scene="wishes" id="personal-wishes" aria-label="أمنيات">
-      <div class="wishes-composition reveal-fade">
-        <h2 class="wishes-leadin">أتمنى ما تفقديش...</h2>
-        <ul class="wishes-lines" id="wishesLines">
-          <!-- Populated dynamically via site.ts -->
-        </ul>
-      </div>
-    </section>
-
-    <!-- 08 — BIRTHDAY REVEAL -->
-    <section class="manuscript-scene birthday-scene scene-birthday-night" data-scene="birthday" id="birthday-reveal" aria-label="يوم ميلادك">
-      <div class="birthday-composition reveal-fade">
-        <span class="birthday-moment-lead">واليوم...</span>
-        <p class="birthday-moment-sub">صفحة جديدة... والباقي لسه بيتكتب.</p>
-        
-        <h2 class="birthday-name">لُـجَـيْـن</h2>
+    <section class="chapter chapter-birthday" data-scene="birthday" id="birthday">
+      <div class="chapter-inner birthday-inner">
+        <span class="birthday-pre">واليوم...</span>
+        <p class="birthday-sub">صفحة جديدة، والباقي لسه بيتكتب.</p>
+        <h2 class="birthday-name">لُجين</h2>
         <p class="birthday-wish">كل سنة وأنتِ بخير.</p>
-        <span class="birthday-english font-english">Happy Birthday, Loji.</span>
+        <span class="birthday-en font-english">Happy Birthday, Loji.</span>
+        <button id="petalButton" class="petal-button" type="button">انثري الورد</button>
+      </div>
+    </section>
 
-        <div class="birthday-action-wrap">
-          <button id="btnPetalsBurst" class="btn-petals-action" type="button" aria-label="انثري الورد">
-            <span>انثري الورد</span>
+    <section class="chapter chapter-letter" data-scene="letter" id="letter">
+      <div class="chapter-inner letter-inner">
+        <div id="letterStage" class="letter-stage">
+          <button id="letterSeal" class="letter-envelope" type="button" aria-label="افتحي الرسالة">
+            <span class="envelope-flap"></span>
+            <span class="envelope-seal">لُ</span>
+            <span class="envelope-copy"><strong>آخر حاجة</strong><small>رسالة لكِ</small></span>
           </button>
+          <article id="finalLetter" class="final-letter" aria-hidden="true">
+            <h3 id="letterSalutation"></h3>
+            <div id="letterBody"></div>
+            <div class="letter-signature">
+              <span id="letterClosing"></span>
+              <strong id="letterSignature"></strong>
+              <small id="letterDate"></small>
+            </div>
+            <button id="closeLetter" class="close-letter" type="button">اطوي الرسالة</button>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- 09 — FINAL SEALED LETTER -->
-    <section class="manuscript-scene letter-scene scene-letter" data-scene="letter" id="final-letter" aria-label="رسالة مختومة">
-      <div class="letter-interaction-wrapper reveal-fade">
-        <!-- Sealed State -->
-        <div class="wax-envelope-card" id="waxEnvelope" role="button" tabindex="0" aria-label="انقري لكسر الختم وقراءة الرسالة">
-          <div class="wax-seal-medallion" id="waxSealBtn">
-            <span>لُ</span>
-          </div>
-          <p class="envelope-instruction">آخر حاجة • رسالة لكِ</p>
-          <span class="envelope-hint">رسالة بختم شمعي • افتحيها</span>
-        </div>
-
-        <!-- Unfolded Letter State -->
-        <article class="unfolded-letter-manuscript" id="unfoldedLetter" aria-hidden="true">
-          <h3 class="letter-salutation">إلى لُجين،</h3>
-          <div class="letter-body-content" id="letterParagraphs">
-            <!-- Populated dynamically via site.ts -->
-          </div>
-          <div class="letter-sign-off">
-            <p class="letter-closing" id="letterClosing">عيد ميلاد سعيد.</p>
-            <span class="letter-signature-name" id="signatureName">عابد</span>
-            <span class="letter-date" id="signatureDate">سبتمبر ٢٠٢٦</span>
-          </div>
-          <button id="btnResealLetter" class="btn-reseal-prompt" type="button">أعيدي طي الرسالة</button>
-        </article>
-      </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="manuscript-colophon">
-      <p>لُجين • ٢٠٢٦</p>
-    </footer>
-
+    <footer class="story-footer"><span>لُجين • ٢٠٢٦</span></footer>
   </main>
 
-  <!-- Main TypeScript Entrypoint -->
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
