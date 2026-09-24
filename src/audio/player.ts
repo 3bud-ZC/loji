@@ -14,6 +14,7 @@ export class VintageAudioPlayer {
   private listeners: PlayStateListener[] = [];
   private timer: number | null = null;
   private master: GainNode | null = null;
+  private sfxBus: GainNode | null = null;
   private vinyl: GainNode | null = null;
   private step = 0;
 
@@ -94,10 +95,15 @@ export class VintageAudioPlayer {
       compressor.attack.value = 0.012;
       compressor.release.value = 0.3;
 
+      const sfxBus = this.audioCtx.createGain();
+      sfxBus.gain.value = 0.34;
+
       master.connect(warmth);
+      sfxBus.connect(warmth);
       warmth.connect(compressor);
       compressor.connect(this.audioCtx.destination);
       this.master = master;
+      this.sfxBus = sfxBus;
 
       this.createVinylBed();
     }
@@ -244,6 +250,104 @@ export class VintageAudioPlayer {
     osc.start(when); osc.stop(when + 0.22);
   }
 
+  public async playPageTurn(): Promise<void> {
+    const ctx = await this.ensureContext();
+    if (!this.sfxBus) return;
+    const now = ctx.currentTime;
+    this.playNoiseSweep(now, 0.42, 720, 2600, 0.16);
+    this.playSoftClick(now + 0.08, 150, 0.07);
+  }
+
+  public async playWaxCrack(): Promise<void> {
+    const ctx = await this.ensureContext();
+    if (!this.sfxBus) return;
+    const now = ctx.currentTime;
+    this.playSoftClick(now, 185, 0.12);
+    this.playSoftClick(now + 0.055, 120, 0.08);
+    this.playNoiseSweep(now + 0.015, 0.18, 1300, 4200, 0.08);
+  }
+
+  public async playNeedleDrop(): Promise<void> {
+    const ctx = await this.ensureContext();
+    if (!this.sfxBus) return;
+    const now = ctx.currentTime;
+    this.playSoftClick(now, 260, 0.08);
+    this.playNoiseSweep(now + 0.025, 0.22, 1700, 5000, 0.055);
+  }
+
+  public async playChime(): Promise<void> {
+    const ctx = await this.ensureContext();
+    if (!this.sfxBus) return;
+    const now = ctx.currentTime;
+    this.playBellTone(659.25, now, 0.62, 0.055);
+    this.playBellTone(880, now + 0.11, 0.72, 0.04);
+  }
+
+  private playBellTone(freq: number, when: number, duration: number, amp: number): void {
+    if (!this.audioCtx || !this.sfxBus) return;
+    const osc = this.audioCtx.createOscillator();
+    const gain = this.audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, when);
+    gain.gain.setValueAtTime(0.0001, when);
+    gain.gain.exponentialRampToValueAtTime(amp, when + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, when + duration);
+    osc.connect(gain);
+    gain.connect(this.sfxBus);
+    osc.start(when);
+    osc.stop(when + duration + 0.03);
+  }
+
+  private playSoftClick(when: number, freq: number, amp: number): void {
+    if (!this.audioCtx || !this.sfxBus) return;
+    const osc = this.audioCtx.createOscillator();
+    const gain = this.audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, when);
+    osc.frequency.exponentialRampToValueAtTime(Math.max(45, freq * 0.38), when + 0.08);
+    gain.gain.setValueAtTime(amp, when);
+    gain.gain.exponentialRampToValueAtTime(0.0001, when + 0.09);
+    osc.connect(gain);
+    gain.connect(this.sfxBus);
+    osc.start(when);
+    osc.stop(when + 0.1);
+  }
+
+  private playNoiseSweep(
+    when: number,
+    duration: number,
+    startFrequency: number,
+    endFrequency: number,
+    amp: number
+  ): void {
+    if (!this.audioCtx || !this.sfxBus) return;
+    const length = Math.max(1, Math.floor(this.audioCtx.sampleRate * duration));
+    const buffer = this.audioCtx.createBuffer(1, length, this.audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+
+    for (let i = 0; i < length; i++) {
+      const envelope = Math.sin((i / length) * Math.PI);
+      data[i] = (Math.random() * 2 - 1) * envelope;
+    }
+
+    const source = this.audioCtx.createBufferSource();
+    const filter = this.audioCtx.createBiquadFilter();
+    const gain = this.audioCtx.createGain();
+    source.buffer = buffer;
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(startFrequency, when);
+    filter.frequency.exponentialRampToValueAtTime(endFrequency, when + duration);
+    filter.Q.value = 0.7;
+    gain.gain.setValueAtTime(0.0001, when);
+    gain.gain.linearRampToValueAtTime(amp, when + Math.min(0.045, duration * 0.25));
+    gain.gain.exponentialRampToValueAtTime(0.0001, when + duration);
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.sfxBus);
+    source.start(when);
+    source.stop(when + duration + 0.02);
+  }
+
   private stopInstrumental(): void {
     if (this.timer !== null) {
       window.clearTimeout(this.timer);
@@ -269,6 +373,9 @@ export class VintageAudioPlayer {
       void this.audioCtx.close();
     }
     this.audioCtx = null;
+    this.master = null;
+    this.sfxBus = null;
+    this.vinyl = null;
     this.listeners = [];
   }
 }

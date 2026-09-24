@@ -180,3 +180,198 @@ body.started .audio-dock:hover{border-color:rgba(199,165,108,.32)}
 .poetry-card.poet-and-i .verse{font-size:clamp(1.2rem,5.7vw,1.62rem);line-height:1.95}
 .poetry-card.poet-and-i .verse:first-child,
 .poetry-card.poet-and-i .verse:last-child{color:#e7c68d}
+
+
+/* ============================================================
+   IMMERSIVE DEPTH PASS — 3D, transitions, visual seasoning
+   ============================================================ */
+
+/* Stronger physical-book illusion without changing the approved cover. */
+.intro{perspective:1600px}
+.book-shell{transform-style:preserve-3d;will-change:transform}
+.book-shell::before{
+  content:"";
+  position:absolute;
+  inset:8px -9px -12px 12px;
+  z-index:-3;
+  border-radius:10px;
+  background:linear-gradient(145deg,#2d0e15,#19070b);
+  box-shadow:18px 25px 46px rgba(0,0,0,.46);
+  transform:translateZ(-22px)
+}
+.book-shell::after{
+  content:"";
+  position:absolute;
+  top:4%;
+  bottom:4%;
+  left:-7px;
+  width:16px;
+  z-index:-2;
+  border-radius:6px 0 0 6px;
+  background:linear-gradient(90deg,#b9a27c,#eee2cb 42%,#9d8968);
+  transform:translateZ(-12px) rotateY(78deg);
+  transform-origin:right center;
+  opacity:.88
+}
+.book-cover{
+  transform:translateZ(10px);
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden
+}
+.book-frame{transform:translateZ(12px)}
+.book-label,.book-title,.book-line,.wax-mark,.open-label{
+  position:relative;
+  transform:translateZ(18px)
+}
+.wax-mark{box-shadow:0 14px 34px rgba(0,0,0,.48),inset 0 3px 5px rgba(255,255,255,.17),0 0 0 5px rgba(57,16,24,.26)}
+.book-pages{transform:translateZ(-8px);box-shadow:14px 20px 48px rgba(0,0,0,.5)}
+
+/* Each chapter gets a tiny visual bridge instead of a hard cut. */
+.chapter{perspective:1200px}
+.chapter:not(.chapter-hero)::after{
+  content:"❦";
+  position:absolute;
+  top:-.45rem;
+  left:50%;
+  width:min(42vw,190px);
+  height:1.4rem;
+  display:grid;
+  place-items:center;
+  transform:translateX(-50%) scaleX(.52);
+  transform-origin:center;
+  color:rgba(199,165,108,.14);
+  font-family:"Cormorant Garamond",serif;
+  font-size:1rem;
+  background:linear-gradient(90deg,transparent,rgba(199,165,108,.13) 38%,transparent 38% 62%,rgba(199,165,108,.13) 62%,transparent);
+  opacity:.25;
+  transition:opacity .8s ease,transform 1s cubic-bezier(.16,1,.3,1),color .8s ease
+}
+.chapter.scene-active:not(.chapter-hero)::after{
+  opacity:.8;
+  color:rgba(214,181,123,.4);
+  transform:translateX(-50%) scaleX(1)
+}
+.chapter.scene-active .section-title,
+.chapter.scene-active .birthday-name{
+  text-shadow:0 0 34px rgba(213,177,116,.08),0 18px 45px rgba(0,0,0,.28)
+}
+
+/* Original poem is clearly the personal voice. */
+.poetry-card.poet-and-i{
+  isolation:isolate
+}
+.poetry-card.poet-and-i::after{
+  content:"";
+  position:absolute;
+  inset:15% 7%;
+  z-index:-1;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(102,38,52,.12),transparent 66%);
+  filter:blur(10px);
+  pointer-events:none
+}
+.poem-signature{
+  display:block;
+  margin-top:.85rem;
+  color:rgba(218,181,119,.72);
+  font-family:"Aref Ruqaa",serif;
+  font-size:.95rem;
+  letter-spacing:.04em
+}
+
+/* Deeper portrait object while remaining lightweight. */
+.keepsake{
+  transform-style:preserve-3d;
+  transform-origin:50% 50%;
+  backface-visibility:hidden
+}
+.keepsake img{transform:translateZ(7px)}
+.keepsake figcaption{position:relative;transform:translateZ(10px)}
+.keepsake-tape{transform-style:preserve-3d}
+.photo-zoom-hit::before{
+  content:"";
+  position:absolute;
+  inset:4%;
+  border-radius:2px;
+  box-shadow:inset 0 0 0 1px rgba(255,239,211,.06);
+  opacity:0;
+  transition:opacity .3s ease
+}
+.photo-zoom-hit:hover::before{opacity:1}
+
+/* Record gains a floating 3D surface but stays compact. */
+.record-player{
+  transform-style:preserve-3d;
+  transform-origin:center;
+  transition:box-shadow .45s ease,filter .45s ease
+}
+.record{transform:translateZ(8px)}
+.needle{transform-style:preserve-3d;filter:drop-shadow(0 7px 5px rgba(0,0,0,.28))}
+.record-label{box-shadow:inset 0 0 18px rgba(0,0,0,.18)}
+.record-player.playing{filter:saturate(1.04) brightness(1.015)}
+
+/* Birthday visual crescendo: luminous, not noisy. */
+.chapter-birthday.scene-active .birthday-inner::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:min(92vw,620px);
+  aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  z-index:-2;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at center,rgba(185,115,83,.08),transparent 38%),
+    conic-gradient(from 0deg,transparent,rgba(207,171,104,.035),transparent 32%,rgba(119,49,63,.045),transparent 67%);
+  animation:birthdayAura 11s linear infinite;
+  filter:blur(3px)
+}
+
+/* Envelope and letter now occupy real depth. */
+.letter-stage{perspective:1200px;transform-style:preserve-3d}
+.letter-envelope{transform-style:preserve-3d;backface-visibility:hidden}
+.envelope-flap{backface-visibility:hidden}
+.envelope-seal{transform-style:preserve-3d}
+.final-letter{transform-origin:50% 10%;backface-visibility:hidden}
+.epilogue{
+  margin:1.4rem auto 0;
+  max-width:460px;
+  color:rgba(224,197,153,.78);
+  font-family:"Aref Ruqaa",serif;
+  font-size:clamp(1rem,4.6vw,1.25rem);
+  line-height:1.9;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(12px);
+  transition:opacity .55s ease,visibility .55s ease,transform .55s ease
+}
+.epilogue.is-visible{
+  opacity:1;
+  visibility:visible;
+  transform:none
+}
+
+/* Ambient depth reacts to the active scene with CSS only. */
+body[data-scene="poetry"] .ambient-vignette{filter:blur(43px) saturate(.9)}
+body[data-scene="photo"] .ambient-vignette{filter:blur(40px) saturate(1.04)}
+body[data-scene="birthday"] .moon{box-shadow:0 0 62px rgba(236,210,160,.27)}
+body[data-scene="letter"] .candle-glow{opacity:.58}
+
+/* Keep visual effects inexpensive on phones. */
+@media(max-width:700px){
+  .book-shell::after{display:none}
+  .book-shell::before{inset:7px -5px -8px 8px;transform:translateZ(-14px)}
+  .chapter:not(.chapter-hero)::after{width:150px}
+  .poetry-card.poet-and-i::after{inset:18% 2%}
+  .epilogue{max-width:82vw;margin-top:1rem}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .chapter:not(.chapter-hero)::after{transition:none}
+  .chapter-birthday.scene-active .birthday-inner::after{animation:none}
+}
+
+@keyframes birthdayAura{
+  to{transform:translate(-50%,-50%) rotate(360deg)}
+}

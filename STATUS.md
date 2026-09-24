@@ -1,7 +1,7 @@
 # Project Status: Loji Birthday Poetic Experience
 
 ## Current Completion State
-- **Status:** Final Experience Polish — Deployed & Verified
+- **Status:** Immersive 3D & Sound Pass — Implemented / Deploying
 - **Repository:** https://github.com/3bud-ZC/loji.git
 - **Live URL:** https://3bud-zc.github.io/loji/
 
@@ -61,3 +61,16 @@
 - GitHub Actions build: **Passed**.
 - GitHub Pages deploy: **Passed**.
 - Final polished commit: `f3af1643b398b083b7fdae20122620229edd535d`.
+
+
+## Immersive 3D & Sound Pass
+- Preserved the approved design and section order.
+- Strengthened the physical manuscript opening with layered cover/page depth and pointer-based 3D tilt on fine-pointer devices.
+- Added lightweight chapter bridge ornaments that animate only for the active scene.
+- Added a stronger dedicated treatment for Abdullah's original poem, including a discreet **— عابد** signature.
+- Added procedural Web Audio sound design with no external files: page-turn, wax-crack, needle-drop, and soft chime primitives.
+- Connected page-turn sound to the manuscript opening, needle-drop to starting the record, and wax-crack to opening the final letter.
+- Added deeper 3D treatment to the portrait, record player, envelope, and final letter while keeping mobile effects bounded.
+- Added an epilogue after folding the final letter: **وكل سنة وإنتِ حكاية تستاهل تتكتب.**
+- Added social preview metadata using the existing Loji portrait; a real copyrighted song is still not bundled because no owned/provided MP3 was supplied.
+- No new runtime dependencies were added.

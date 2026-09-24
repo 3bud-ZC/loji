@@ -27,8 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initPhotoLightbox(reducedMotion);
   initHeroEasterEgg(reducedMotion);
   initBirthdayMoment(celebration, reducedMotion);
-  initLetter(reducedMotion);
+  initLetter(audioPlayer, reducedMotion);
   initSceneTracking();
+  initInteractiveDepth(reducedMotion);
 
   if (!reducedMotion) initMotion();
 
@@ -109,6 +110,13 @@ function renderPoetry(): void {
 
     article.append(name, verses);
 
+    if (scene.isOriginal) {
+      const signature = document.createElement('span');
+      signature.className = 'poem-signature';
+      signature.textContent = '— عابد';
+      article.appendChild(signature);
+    }
+
     if (scene.annotation.trim()) {
       const note = document.createElement('p');
       note.className = 'poet-note';
@@ -179,6 +187,9 @@ function initAudio(audioPlayer: VintageAudioPlayer): void {
 
   const toggle = async () => {
     try {
+      if (!audioPlayer.getIsPlaying()) {
+        void audioPlayer.playNeedleDrop();
+      }
       await audioPlayer.toggle();
     } catch (error) {
       console.error('Audio playback failed:', error);
@@ -215,6 +226,7 @@ function initIntro(audioPlayer: VintageAudioPlayer, reducedMotion: boolean): voi
     document.body.classList.add('started');
 
     try {
+      void audioPlayer.playPageTurn();
       await audioPlayer.play();
     } catch (error) {
       console.warn('Opening soundtrack could not start:', error);
@@ -325,7 +337,8 @@ function initHeroEasterEgg(reducedMotion: boolean): void {
 }
 
 function initBirthdayMoment(celebration: PoeticCelebration | null, reducedMotion: boolean): void {
-  qs<HTMLButtonElement>('#petalButton')?.addEventListener('click', () => celebration?.burst(16));
+  const audio = qs<HTMLButtonElement>('#petalButton');
+  audio?.addEventListener('click', () => celebration?.burst(16));
 
   if (reducedMotion || !celebration) return;
 
@@ -337,15 +350,19 @@ function initBirthdayMoment(celebration: PoeticCelebration | null, reducedMotion
   });
 }
 
-function initLetter(reducedMotion: boolean): void {
+function initLetter(audioPlayer: VintageAudioPlayer, reducedMotion: boolean): void {
   const stage = qs('#letterStage');
   const envelope = qs<HTMLButtonElement>('#letterSeal');
   const letter = qs<HTMLElement>('#finalLetter');
   const closeButton = qs<HTMLButtonElement>('#closeLetter');
   const signature = qs('#letterSignature');
-  if (!stage || !envelope || !letter || !closeButton || !signature) return;
+  const epilogue = qs('#epilogue');
+  if (!stage || !envelope || !letter || !closeButton || !signature || !epilogue) return;
 
   const open = () => {
+    void audioPlayer.playWaxCrack();
+    epilogue.classList.remove('is-visible');
+    epilogue.setAttribute('aria-hidden', 'true');
     stage.classList.add('open');
     letter.setAttribute('aria-hidden', 'false');
 
@@ -382,6 +399,8 @@ function initLetter(reducedMotion: boolean): void {
       letter.style.display = 'none';
       envelope.style.display = 'block';
       stage.classList.remove('open');
+      epilogue.classList.add('is-visible');
+      epilogue.setAttribute('aria-hidden', 'false');
       return;
     }
 
@@ -397,6 +416,18 @@ function initLetter(reducedMotion: boolean): void {
         gsap.set(qs('.envelope-seal', envelope), { opacity: 1, scale: 1, rotate: 0 });
         gsap.set(signature, { clearProps: 'all' });
         stage.classList.remove('open');
+        epilogue.setAttribute('aria-hidden', 'false');
+        gsap.fromTo(epilogue,
+          { opacity: 0, y: 12, filter: 'blur(5px)' },
+          {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: .7,
+            ease: 'power3.out',
+            onStart: () => epilogue.classList.add('is-visible')
+          }
+        );
       }
     });
   };
@@ -410,8 +441,11 @@ function initSceneTracking(): void {
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
-      const scene = (entry.target as HTMLElement).dataset.scene;
+      const chapter = entry.target as HTMLElement;
+      const scene = chapter.dataset.scene;
       if (scene) document.body.dataset.scene = scene;
+
+      chapters.forEach(item => item.classList.toggle('scene-active', item === chapter));
     });
   }, { threshold: .48 });
 
@@ -543,4 +577,66 @@ function initMotion(): void {
       scrub: 2
     }
   });
+}
+
+
+function initInteractiveDepth(reducedMotion: boolean): void {
+  if (reducedMotion || !window.matchMedia('(pointer: fine)').matches) return;
+
+  const intro = qs('#intro');
+  const book = qs<HTMLElement>('.book-shell');
+  if (intro && book) {
+    const resetBook = () => gsap.to(book, {
+      rotateX: 0,
+      rotateY: 0,
+      rotateZ: 0,
+      duration: .45,
+      ease: 'power3.out',
+      overwrite: 'auto'
+    });
+
+    intro.addEventListener('pointermove', event => {
+      const rect = intro.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width - .5) * 2;
+      const y = ((event.clientY - rect.top) / rect.height - .5) * 2;
+      gsap.to(book, {
+        rotateY: x * 5.5,
+        rotateX: y * -4,
+        rotateZ: x * .35,
+        duration: .38,
+        ease: 'power2.out',
+        overwrite: 'auto'
+      });
+    }, { passive: true });
+
+    intro.addEventListener('pointerleave', resetBook, { passive: true });
+  }
+
+  const photo = qs<HTMLElement>('.keepsake');
+  const zoomHit = qs<HTMLElement>('#photoZoomButton');
+  if (photo && zoomHit) {
+    zoomHit.addEventListener('pointermove', event => {
+      const rect = zoomHit.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width - .5) * 2;
+      const y = ((event.clientY - rect.top) / rect.height - .5) * 2;
+      gsap.to(photo, {
+        rotateY: x * 3.2,
+        rotateX: y * -2.4,
+        transformPerspective: 900,
+        duration: .3,
+        ease: 'power2.out',
+        overwrite: 'auto'
+      });
+    }, { passive: true });
+
+    zoomHit.addEventListener('pointerleave', () => {
+      gsap.to(photo, {
+        rotateX: 0,
+        rotateY: 0,
+        duration: .45,
+        ease: 'power3.out',
+        overwrite: 'auto'
+      });
+    }, { passive: true });
+  }
 }
