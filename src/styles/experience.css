@@ -693,3 +693,178 @@ body[data-scene="letter"] .candle-glow{opacity:.58}
     width:90vw;
   }
 }
+
+
+/* ============================================================
+   BOOK GEOMETRY FIX — realistic closed-book proportions
+   ============================================================ */
+.book-shell{
+  width:min(82vw,410px);
+  aspect-ratio:.69;
+  transform-style:preserve-3d;
+  isolation:isolate;
+}
+
+/* Back cover: only a restrained dark lip behind the pages. */
+.book-shell::before{
+  inset:4px -3px -5px 5px;
+  z-index:-3;
+  border-radius:9px;
+  background:linear-gradient(145deg,#37111a,#1e080d 70%);
+  box-shadow:10px 16px 32px rgba(0,0,0,.42);
+  transform:translateZ(-13px);
+}
+
+/* Remove the artificial bright side slab. */
+.book-shell::after{
+  display:none;
+}
+
+/* Page block: barely visible on fore-edge and bottom, like a closed book. */
+.book-pages{
+  inset:5px 3px -4px 7px;
+  z-index:1;
+  border-radius:7px;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      #d8cbb4 0 1px,
+      #eee4d1 1px 3px
+    );
+  box-shadow:
+    5px 8px 16px rgba(0,0,0,.28),
+    inset -2px 0 4px rgba(95,68,42,.1);
+  transform:translateZ(-6px);
+}
+
+.book-pages::after{
+  inset:4px 3px;
+  border-right:0;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.1),transparent 10%),
+    linear-gradient(180deg,transparent 92%,rgba(91,61,38,.08));
+}
+
+/* Front cover should visually contain the entire book. */
+.book-cover{
+  inset:0;
+  border-radius:9px;
+  transform:translateZ(8px);
+  box-shadow:
+    0 24px 58px rgba(0,0,0,.5),
+    inset 0 0 70px rgba(0,0,0,.28),
+    inset 0 0 0 1px rgba(226,183,112,.05);
+  padding:11% 10% 10%;
+  justify-content:center;
+  gap:0;
+}
+
+.book-frame{
+  inset:4.2%;
+  transform:translateZ(9px);
+}
+
+/* Clean vertical rhythm on the cover. */
+.book-label{
+  margin:0 0 1.2rem;
+  font-size:clamp(.9rem,3.7vw,1.14rem);
+  line-height:1;
+  transform:translateZ(14px);
+}
+
+.book-title{
+  margin:0;
+  font-size:clamp(3rem,12vw,4.7rem);
+  line-height:1.02;
+  transform:translateZ(16px);
+}
+
+.book-line{
+  width:min(92%,310px);
+  margin:1.35rem auto 0;
+  font-size:clamp(.98rem,4.15vw,1.22rem);
+  line-height:1.8;
+  transform:translateZ(14px);
+}
+
+.wax-mark{
+  width:68px;
+  height:68px;
+  margin-top:1.65rem;
+  font-size:1.85rem;
+  transform:translateZ(17px);
+}
+
+.open-label{
+  margin-top:.65rem;
+  font-size:.92rem;
+  transform:translateZ(14px);
+}
+
+.book-page-glow{
+  inset:9% 2% 7% 6%;
+}
+
+/* Phone-specific book proportions. */
+@media(max-width:700px){
+  .book-shell{
+    width:min(80vw,360px);
+    aspect-ratio:.69;
+  }
+
+  .book-shell::before{
+    inset:3px -2px -4px 4px;
+    transform:translateZ(-10px);
+  }
+
+  .book-pages{
+    inset:4px 2px -3px 6px;
+    box-shadow:4px 7px 14px rgba(0,0,0,.26);
+  }
+
+  .book-cover{
+    padding:10.5% 9.5% 9.5%;
+  }
+
+  .book-label{
+    margin-bottom:1rem;
+    font-size:.94rem;
+  }
+
+  .book-title{
+    font-size:clamp(3.2rem,14vw,4.2rem);
+  }
+
+  .book-line{
+    max-width:280px;
+    margin-top:1.15rem;
+    font-size:clamp(.95rem,4.2vw,1.08rem);
+    line-height:1.75;
+  }
+
+  .wax-mark{
+    width:62px;
+    height:62px;
+    margin-top:1.4rem;
+    font-size:1.7rem;
+  }
+
+  .open-label{
+    margin-top:.55rem;
+    font-size:.88rem;
+  }
+}
+
+@media(max-width:380px){
+  .book-shell{
+    width:82vw;
+  }
+
+  .book-title{
+    font-size:3.1rem;
+  }
+
+  .book-line{
+    font-size:.94rem;
+  }
+}
