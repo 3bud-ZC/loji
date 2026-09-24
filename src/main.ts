@@ -107,11 +107,15 @@ function renderPoetry(): void {
       verses.appendChild(line);
     });
 
-    const note = document.createElement('p');
-    note.className = 'poet-note';
-    note.textContent = scene.annotation;
+    article.append(name, verses);
 
-    article.append(name, verses, note);
+    if (scene.annotation.trim()) {
+      const note = document.createElement('p');
+      note.className = 'poet-note';
+      note.textContent = scene.annotation;
+      article.appendChild(note);
+    }
+
     stack.appendChild(article);
   });
 }
@@ -443,7 +447,7 @@ function initMotion(): void {
     const note = qs('.poet-note', card);
     const name = qs('.poet-name', card);
 
-    gsap.timeline({
+    const timeline = gsap.timeline({
       scrollTrigger: {
         trigger: card,
         start: 'top 68%',
@@ -452,8 +456,11 @@ function initMotion(): void {
       }
     })
       .from(name, { opacity: 0, y: 14 })
-      .from(lines, { opacity: 0, y: 22, stagger: .09 }, '<.05')
-      .from(note, { opacity: 0, y: 10 }, '-=.08');
+      .from(lines, { opacity: 0, y: 22, stagger: .09 }, '<.05');
+
+    if (note) {
+      timeline.from(note, { opacity: 0, y: 10 }, '-=.08');
+    }
   });
 
   gsap.to('.keepsake', {
