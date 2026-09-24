@@ -1,7 +1,7 @@
 # Project Status: Loji Birthday Poetic Experience
 
 ## Current Completion State
-- **Status:** Immersive 3D & Sound Pass — Implemented / Deploying
+- **Status:** Immersive 3D & Sound Pass — Deployed & Verified
 - **Repository:** https://github.com/3bud-ZC/loji.git
 - **Live URL:** https://3bud-zc.github.io/loji/
 
@@ -74,3 +74,9 @@
 - Added an epilogue after folding the final letter: **وكل سنة وإنتِ حكاية تستاهل تتكتب.**
 - Added social preview metadata using the existing Loji portrait; a real copyrighted song is still not bundled because no owned/provided MP3 was supplied.
 - No new runtime dependencies were added.
+
+
+## Immersive Pass Verification
+- GitHub Actions build: **Passed**.
+- GitHub Pages deployment: **Passed**.
+- Verified commit: `36727ac249fb368577424cabde623f08b70b4379`.
